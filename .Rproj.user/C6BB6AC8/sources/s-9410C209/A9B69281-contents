@@ -1,0 +1,14 @@
+#.R
+source('results_analysis/read.R') # read results
+source.all('./results_analysis/results_descriptive')
+source.all('./results_analysis/results_plots')
+source.all('./simulation')
+source.all('./robust/garch')
+source.all('./robust/cdcc')
+source.all('./standard/garch')
+source.all('./standard/cdcc')
+
+#.cpp
+sourceCpp('cpp/loglikelihoodGARCH.cpp')
+sourceCpp('cpp/robust_loglikelihoodGARCH.cpp')
+sourceCpp('cpp/student_loglikelihoodGARCH.cpp')

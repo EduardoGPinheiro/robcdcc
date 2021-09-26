@@ -1,0 +1,7 @@
+read = function(paths){
+ returns = vector(mode = 'list', length=length(paths))
+ returns = paths %>% lapply(., readRDS) 
+ 
+ return(returns)
+}
+

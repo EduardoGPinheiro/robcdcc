@@ -1,0 +1,72 @@
+'Simulate and save cDCC processes in high dimension.'
+# Packages
+library(dplyr)
+library(ggplot2)
+library(rlist)
+library(Metrics) # RMSE
+library(purrr)
+library(readr)
+library(tidyr) # pivot_wider
+library(data.table)
+library(lemon) # shared subtitle for grid.arrange
+library(miceadds) # source.all
+library(Rcpp)
+library(RcppArmadillo)
+library(parallel)
+library(robcdcc)
+
+# Paths
+setwd('/home/eduado/Documentos/Mestrado_Unicamp/')
+
+# Functions
+source('packages.R')
+
+# Paths, parameters & attributes - delta equals 0.95...
+phi = c(.1, .8)
+nobs = 1000
+ndim = 1000
+replica = 500
+seed = c(1:100)
+count = 0
+
+repCDCC_H = function(){
+  # Starting workers
+  cores = detectCores() # detecting number of cores in the PC
+  cl = makeCluster(cores-2)
+  
+  clusterExport(cl, c("rtruncnorm", "high_dimension_simCDCC", "simCDCC_C"))
+  clusterExport(cl, c('phi', "nobs", "ndim"), envir = environment())
+  
+  # Simulation
+  for(i in 26:29){
+    tryCatch({
+      count = count + 10
+      checkpoint = count * 10 / replica
+      cat('\n', 'progress in ', checkpoint, '%', '\n')
+      print(Sys.time())
+      
+      sim = parLapply(
+        cl = cl,
+        1:10,
+        fun = function(x) {
+          high_dimension_simCDCC(phi, nobs, x + i * 20)
+        }
+      )
+      
+      cat('\n', 'salvando resultados')
+      print(Sys.time())
+      
+      path = paste('simulation_results/high_dimension_simulation/pt_', i, '.Rds', 
+                   sep = "")
+      
+      # checkpoint
+      saveRDS(sim, file = path)
+    }, error = function(e){cat("ERROR :",
+                               conditionMessage(e), '. iteration:', i, "\n")})
+    
+  }
+  stopCluster(cl)
+}
+
+# Executando rotina
+repCDCC_H()

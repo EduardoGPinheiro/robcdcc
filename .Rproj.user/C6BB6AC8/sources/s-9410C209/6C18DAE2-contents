@@ -1,0 +1,479 @@
+
+R version 4.0.4 (2021-02-15) -- "Lost Library Book"
+Copyright (C) 2021 The R Foundation for Statistical Computing
+Platform: x86_64-pc-linux-gnu (64-bit)
+
+R é um software livre e vem sem GARANTIA ALGUMA.
+Você pode redistribuí-lo sob certas circunstâncias.
+Digite 'license()' ou 'licence()' para detalhes de distribuição.
+
+R é um projeto colaborativo com muitos contribuidores.
+Digite 'contributors()' para obter mais informações e
+'citation()' para saber como citar o R ou pacotes do R em publicações.
+
+Digite 'demo()' para demonstrações, 'help()' para o sistema on-line de ajuda,
+ou 'help.start()' para abrir o sistema de ajuda em HTML no seu navegador.
+Digite 'q()' para sair do R.
+
+[Área de trabalho anterior carregada]
+
+> 'Simulate, estimate and calculate portfólio variance.'
+[1] "Simulate, estimate and calculate portfólio variance."
+> # Packages
+> library(dplyr)
+
+Attaching package: ‘dplyr’
+
+The following objects are masked from ‘package:stats’:
+
+    filter, lag
+
+The following objects are masked from ‘package:base’:
+
+    intersect, setdiff, setequal, union
+
+> library(ggplot2)
+> library(rlist)
+> library(Metrics) # RMSE
+> library(purrr)
+> library(readr)
+> library(tidyr) # pivot_wider
+> library(data.table)
+
+Attaching package: ‘data.table’
+
+The following object is masked from ‘package:purrr’:
+
+    transpose
+
+The following objects are masked from ‘package:dplyr’:
+
+    between, first, last
+
+> library(lemon) # shared subtitle for grid.arrange
+
+Attaching package: ‘lemon’
+
+The following object is masked from ‘package:purrr’:
+
+    %||%
+
+The following objects are masked from ‘package:ggplot2’:
+
+    CoordCartesian, element_render
+
+> library(miceadds) # source.all
+Carregando pacotes exigidos: mice
+
+Attaching package: ‘mice’
+
+The following object is masked from ‘package:stats’:
+
+    filter
+
+The following objects are masked from ‘package:base’:
+
+    cbind, rbind
+
+* miceadds 3.11-6 (2021-01-21 11:48:47)
+> library(Rcpp)
+> library(RcppArmadillo)
+> library(parallel)
+> library(robcdcc)
+
+Attaching package: ‘robcdcc’
+
+The following objects are masked _by_ ‘.GlobalEnv’:
+
+    calc_Rt_C, compositeCDCC_C, robust_compositeCDCC_C, simCDCC_C,
+    unconditional_correlation
+
+> library(nlshrink)
+> 
+> # Paths
+> setwd('/home/alunos/22/ra229300/Codes')
+> 
+> # Functions
+> source('packages.R')
+*** source calc_ht_error.R 
+*** source calc_ht_Rt_error.R 
+*** source calc_Rt_error.R 
+*** source filter_count.R 
+*** source measures.R 
+*** source quantiles.R 
+*** source rmse.R 
+*** source robust_calc_ht_error.R 
+*** source robust_calc_Rt_error.R 
+*** source robust_general_performance.R 
+*** source tabs.R 
+*** source variance_portfolio.R 
+*** source ecf.R 
+*** source hist.R 
+*** source lines.R 
+*** source fc.R 
+*** source repCDCC.R 
+*** source repGARCH.R 
+Carregando pacotes exigidos: Matrix
+
+Attaching package: ‘Matrix’
+
+The following objects are masked from ‘package:tidyr’:
+
+    expand, pack, unpack
+
+
+Attaching package: ‘expm’
+
+The following object is masked from ‘package:Matrix’:
+
+    expm
+
+Registered S3 method overwritten by 'pryr':
+  method      from
+  print.bytes Rcpp
+
+Attaching package: ‘pryr’
+
+The following object is masked from ‘package:data.table’:
+
+    address
+
+The following objects are masked from ‘package:purrr’:
+
+    compose, partial
+
+*** source simCDCC.R 
+*** source simGARCH.R 
+*** source robust_calc_ht.R 
+*** source robust_gradientGARCH.R 
+*** source robust_loglikelihoodGARCH.R 
+*** source robust_optimGARCH.R 
+*** source robust_calc_Rt.R 
+*** source robust_gradientCDCC.R 
+*** source robust_loglikelihoodCDCC.R 
+*** source robust_optimCDCC.R 
+*** source calc_ht.R 
+*** source loglikelihoodGARCH.R 
+*** source optimGARCH.R 
+*** source calc_Rt.R 
+*** source gradientCDCC.R 
+*** source loglikelihoodCDCC.R 
+*** source optimCDCC.R 
+> 
+> # Paths, parameters & attributes - delta equals 0.95...
+> phi = c(.1, .8)
+> nobs = 1250
+> ndim = 1000
+> count = 0
+> 
+> my_nlshrink = function(data){
++   S = NA
++   tryCatch({
++     S = nlshrink_cov(data, method='nloptr') %>% cov2cor
++   }, error = function(e){cat("ERROR :",
++                              conditionMessage(e))})
++   return(S)
++ }
+> 
+> repCDCC_H = function(nobs, ndim, epsilon=0, d=0, consecutive=FALSE){
++   # Starting workers
++   cores = detectCores() # detecting number of cores in the PC
++   cl = makeCluster(cores-2)
++   
++   clusterExport(cl, c("rtruncnorm", "high_dimension_simCDCC", "simCDCC_C", "burnin_high_dimension_simCDCC"))
++   clusterExport(cl, c("high_dimension_estimateCDCC", 
++                       "optimCDCC", 
++                       "loglikelihoodCDCC",
++                       "gradientCDCC", 
++                       "robust_optimCDCC",
++                       "robust_loglikelihoodCDCC",
++                       "robust_gradientCDCC"
++   ))
++   clusterExport(cl, c("linshrink_cov", "nlshrink_cov", "my_nlshrink", "%>%",
++                       "calc_portfolio_variance", 
++                       "geral_calc_portfolio_variance",
++                       "robust_calc_portfolio_variance"))
++   clusterExport(cl, c('phi', "nobs", "ndim"), envir = environment())
++   
++   # Simulation
++   for(i in 1:1){
++     tryCatch({
++       cat('\n', 'pt ', i, '\n')
++       print(Sys.time())
++       
++       data_path = paste(
++         'simulation_results/high_dimension_simulation_n1250/pt_', i, '.Rds', 
++         sep = "")
++       sim = readRDS(data_path)
++       data = map(sim, 1)
++       seeds = map(sim, 2)
++       
++       burnin_path = paste(
++         'simulation_results/burnin_high_dimension_simulation_n1250/pt_', i, '.Rds', 
++         sep = "")
++       
++       burnin_data = readRDS(burnin_path)
++       bdata = map(burnin_data, 1)
++       bseeds = map(burnin_data, 2)
++       
++       all_data = lapply(1:10, function(x){
++         rbind(bdata[[x]], data[[x]])
++       })
++       
++       # Validating
++       validate_burnin = all_data %>% lapply(anyDuplicated) %>% unlist
++       
++       if(all(validate_burnin == 102) == FALSE){
++         print('burnin sample incompatible!')
++         break
++       }
++       
++       # contaminating data
++       cont_seed = as.list(((i * 10 + 1) : (i * 10  + 10)))
++       cont_data = mapply(contaminate_high1, data, cont_seed, 
++                          MoreArgs = list(d=d, epsilon=epsilon,
++                                          consecutive=consecutive), 
++                          SIMPLIFY = FALSE)
++       
++       # Estimate 
++       print(Sys.time())
++       cat('\n', 'standart estimation!', '\n')
++       
++       estimates = parLapply(
++         cl = cl,
++         cont_data,
++         high_dimension_estimateCDCC
++       )
++       
++       print(Sys.time())
++       cat('\n', 'robust estimation!', '\n')
++       robust_estimates = parLapply(
++         cl = cl,
++         cont_data,
++         high_dimension_robust_estimateCDCC
++       )
++       
++       estimates_df = estimates %>% rlist::list.rbind(.) %>% data.frame
++       robust_estimates_df = robust_estimates %>% rlist::list.rbind(.) %>%
++         data.frame
++       
++       estimates_df$model = 'Q'
++       robust_estimates_df$model = 'R'
++       
++       final_df = rbind(estimates_df, robust_estimates_df)
++       final_df$epsilon = epsilon
++       final_df$d = d
++       final_df$seed = i
++       
++       cat('\n', 'salvando resultados')
++       print(Sys.time())
++       
++       results_path = paste(
++         'simulation_results/high_dimension_estimates_n1250_alt/pt_', i,
++         '_epsilon_', epsilon, '_d_', d, '_consecutive_', consecutive,'.Rds', sep = "")
++       
++       # checkpoint
++       saveRDS(final_df, file = results_path)
++       
++       # Portfolio variance 
++       # Robust config 
++       robust_control = c(1.0465, 1.00045, .975)
++       cy1 = robust_control[1]
++       cy2 = robust_control[2]
++       delta = robust_control[3]
++       
++       # quantile for chi square distribution
++       chisq1 = qchisq(delta, 1) 
++       chisq2 = qchisq(delta, ndim)
++       
++       # Calculating all Qs * epsilon 
++       q_Qs = mapply(calc_Qs, estimates, cont_data, SIMPLIFY = FALSE)
++       r_Qs = mapply(robust_calc_Qs, robust_estimates, cont_data, 
++                     MoreArgs = list(cy1 = cy1, chisq1 = chisq1), 
++                     SIMPLIFY = FALSE)
++       
++       # Getting real S 
++       S = lapply(seeds, function(x){
++         set.seed(x * 10)
++         rho = rtruncnorm(
++           ndim,
++           a = .5 - 4 * .1,
++           b = .5 + 4 * .1,
++           mean = .5,
++           sd = .1
++         )
++         S = rho %o% rho
++         diag(S) = rep(1, ndim)
++         
++         return(S)
++       })
++       
++       # Non-Linear Shrinkage covariance estimate
++       print(Sys.time())
++       cat('\n', 'shrinkage!', '\n')
++       
++       q_S = parLapply(cl=cl, q_Qs, my_nlshrink)
++       r_S = parLapply(cl=cl, r_Qs, my_nlshrink)
++       
++       cat('\n', 'S determinant!', '\n')
++       q_S_determinant =  q_S %>% lapply(determinant) %>%
++         map(1) %>% lapply(function(x){return(x[1])}) %>%
++         unlist
++       r_S_determinant =  r_S %>% lapply(determinant) %>%
++         map(1) %>% lapply(function(x){return(x[1])}) %>%
++         unlist
++       
++       # Portfolio variance 
++       print(Sys.time())
++       cat('\n', 'portfolio_var!', '\n')
++       
++       variance_portfolio = parLapply(
++         cl = cl,
++         1:10,
++         fun=function(x){
++           tryCatch(
++             geral_calc_portfolio_variance(phi=phi, 
++                                           q_phi=estimates[[x]], 
++                                           r_phi=robust_estimates[[x]], 
++                                           rt=data[[x]], burn_rt=bdata[[x]],
++                                           cont_rt=cont_data[[x]],
++                                           S=S[[x]], 
++                                           q_S=q_S[[x]], r_S=r_S[[x]],
++                                           cy2=cy2, chisq2=chisq2)
++           )}
++       ) 
++       
++       results = lapply(variance_portfolio, t) %>% 
++         rlist::list.rbind(.) %>% as.data.frame
++       results$q_S_determinant = q_S_determinant
++       results$r_S_determinant = r_S_determinant
++       results$d = d
++       results$consecutive = consecutive
++       results$epsilon = epsilon
++       
++       # biding results 
++       results_path = paste(
++         'simulation_results/high_dimension_var_n1250_alt/pt_', i, '_epsilon_', 
++         epsilon, '_d_', d, '_consecutive_', consecutive,'.Rds', sep = "")
++       
++       # checkpoint
++       saveRDS(results, file = results_path)
++     }, error = function(e){cat("ERROR :",
++                                conditionMessage(e), '. iteration:', i, "\n")})
++     
++   }
++   stopCluster(cl)
++ }
+> 
+> # repCDCC_H(nobs=nobs, ndim=ndim)
+> # repCDCC_H(nobs=nobs, ndim=ndim, epsilon=0.25, d=5)
+> repCDCC_H(nobs=nobs, ndim=ndim, epsilon=0.25, d=5, consecutive = TRUE)
+
+ pt  1 
+[1] "2021-09-12 11:50:18 -03"
+[1] "2021-09-12 11:50:19 -03"
+
+ standart estimation! 
+[1] "2021-09-12 11:50:28 -03"
+
+ robust estimation! 
+
+ salvando resultados[1] "2021-09-12 11:55:09 -03"
+[1] "2021-09-12 11:55:09 -03"
+
+ shrinkage! 
+
+ S determinant! 
+[1] "2021-09-12 12:38:40 -03"
+
+ portfolio_var! 
+> 
+> # repCDCC_H(nobs=nobs, ndim=ndim, epsilon=0.25, d=10)
+> # repCDCC_H(nobs=nobs, ndim=ndim, epsilon=0.25, d=10, consecutive = TRUE)
+> 
+> repCDCC_H(nobs=nobs, ndim=ndim, epsilon=0.5, d=5)
+
+ pt  1 
+[1] "2021-09-12 15:14:45 -03"
+[1] "2021-09-12 15:14:45 -03"
+
+ standart estimation! 
+[1] "2021-09-12 15:14:56 -03"
+
+ robust estimation! 
+
+ salvando resultados[1] "2021-09-12 15:19:39 -03"
+[1] "2021-09-12 15:19:39 -03"
+
+ shrinkage! 
+
+ S determinant! 
+[1] "2021-09-12 16:04:28 -03"
+
+ portfolio_var! 
+> repCDCC_H(nobs=nobs, ndim=ndim, epsilon=0.5, d=5, consecutive = TRUE)
+
+ pt  1 
+[1] "2021-09-12 18:40:41 -03"
+[1] "2021-09-12 18:40:41 -03"
+
+ standart estimation! 
+[1] "2021-09-12 18:40:48 -03"
+
+ robust estimation! 
+
+ salvando resultados[1] "2021-09-12 18:45:39 -03"
+[1] "2021-09-12 18:45:40 -03"
+
+ shrinkage! 
+
+ S determinant! 
+[1] "2021-09-12 19:25:59 -03"
+
+ portfolio_var! 
+> 
+> repCDCC_H(nobs=nobs, ndim=ndim, epsilon=0.5, d=10)
+
+ pt  1 
+[1] "2021-09-12 22:02:21 -03"
+[1] "2021-09-12 22:02:22 -03"
+
+ standart estimation! 
+[1] "2021-09-12 22:02:34 -03"
+
+ robust estimation! 
+
+ salvando resultados[1] "2021-09-12 22:06:26 -03"
+[1] "2021-09-12 22:06:26 -03"
+
+ shrinkage! 
+
+ S determinant! 
+[1] "2021-09-12 22:59:36 -03"
+
+ portfolio_var! 
+> repCDCC_H(nobs=nobs, ndim=ndim, epsilon=0.5, d=10, consecutive = TRUE)
+
+ pt  1 
+[1] "2021-09-13 01:36:39 -03"
+[1] "2021-09-13 01:36:40 -03"
+
+ standart estimation! 
+[1] "2021-09-13 01:36:44 -03"
+
+ robust estimation! 
+
+ salvando resultados[1] "2021-09-13 01:41:13 -03"
+[1] "2021-09-13 01:41:14 -03"
+
+ shrinkage! 
+
+ S determinant! 
+[1] "2021-09-13 02:21:33 -03"
+
+ portfolio_var! 
+> 
+> 
+> proc.time()
+  usuário   sistema decorrido 
+   78.564     7.899 61679.868 

@@ -1,0 +1,215 @@
+[
+    {
+        "file": "/home/encrypted/epinheiro/Documentos/robcdcc/src/general_portoflio_var.cpp",
+        "file_last_write": 1632090525.0,
+        "definitions": [
+            {
+                "usr": "c:@F@rc2#d#d#",
+                "kind": 6,
+                "parent_name": "",
+                "name": "rc2(double, double)",
+                "file": "/home/encrypted/epinheiro/Documentos/robcdcc/src/general_portoflio_var.cpp",
+                "line": 9,
+                "column": 8
+            },
+            {
+                "usr": "c:@F@geral_calc_portfolio_variance#$@N@arma@S@Col>#d#S0_#S0_#$@N@arma@S@Mat>#d#S1_#S1_#S1_#S1_#S1_#d#d#",
+                "kind": 6,
+                "parent_name": "",
+                "name": "geral_calc_portfolio_variance(arma::vec, arma::vec, arma::vec, arma::mat, arma::mat, arma::mat, arma::mat, arma::mat, arma::mat, double, double)",
+                "file": "/home/encrypted/epinheiro/Documentos/robcdcc/src/general_portoflio_var.cpp",
+                "line": 24,
+                "column": 11
+            },
+            {
+                "usr": "c:@F@real_portfolio_var#$@N@arma@S@Col>#d#$@N@arma@S@Mat>#d#S1_#I#",
+                "kind": 6,
+                "parent_name": "",
+                "name": "real_portfolio_var(arma::vec, arma::mat, arma::mat, int)",
+                "file": "/home/encrypted/epinheiro/Documentos/robcdcc/src/general_portoflio_var.cpp",
+                "line": 196,
+                "column": 8
+            }
+        ]
+    },
+    {
+        "file": "/home/encrypted/epinheiro/Documentos/robcdcc/src/loglikelihoodCDCC.cpp",
+        "file_last_write": 1626128510.0,
+        "definitions": [
+            {
+                "usr": "c:@F@unconditional_correlation#$@N@arma@S@Mat>#d#I#",
+                "kind": 6,
+                "parent_name": "",
+                "name": "unconditional_correlation(arma::mat, int)",
+                "file": "/home/encrypted/epinheiro/Documentos/robcdcc/src/loglikelihoodCDCC.cpp",
+                "line": 12,
+                "column": 13
+            },
+            {
+                "usr": "c:@F@loglikelihoodCDCC_C#d#d#$@N@arma@S@Mat>#d#S0_#I#",
+                "kind": 6,
+                "parent_name": "",
+                "name": "loglikelihoodCDCC_C(double, double, arma::mat, arma::mat, int)",
+                "file": "/home/encrypted/epinheiro/Documentos/robcdcc/src/loglikelihoodCDCC.cpp",
+                "line": 34,
+                "column": 10
+            },
+            {
+                "usr": "c:@F@compositeCDCC_C#d#d#$@N@arma@S@Mat>#d#S0_#I#I#",
+                "kind": 6,
+                "parent_name": "",
+                "name": "compositeCDCC_C(double, double, arma::mat, arma::mat, int, int)",
+                "file": "/home/encrypted/epinheiro/Documentos/robcdcc/src/loglikelihoodCDCC.cpp",
+                "line": 109,
+                "column": 10
+            },
+            {
+                "usr": "c:@F@calc_Rt_C#d#d#$@N@arma@S@Mat>#d#I#",
+                "kind": 6,
+                "parent_name": "",
+                "name": "calc_Rt_C(double, double, arma::mat, int)",
+                "file": "/home/encrypted/epinheiro/Documentos/robcdcc/src/loglikelihoodCDCC.cpp",
+                "line": 127,
+                "column": 13
+            },
+            {
+                "usr": "c:@F@calc_Qs#$@N@arma@S@Col>#d#$@N@arma@S@Mat>#d#",
+                "kind": 6,
+                "parent_name": "",
+                "name": "calc_Qs(arma::vec, arma::mat)",
+                "file": "/home/encrypted/epinheiro/Documentos/robcdcc/src/loglikelihoodCDCC.cpp",
+                "line": 195,
+                "column": 13
+            },
+            {
+                "usr": "c:@F@calc_portfolio_variance#$@N@arma@S@Col>#d#S0_#$@N@arma@S@Mat>#d#S1_#S1_#S1_#",
+                "kind": 6,
+                "parent_name": "",
+                "name": "calc_portfolio_variance(arma::vec, arma::vec, arma::mat, arma::mat, arma::mat, arma::mat)",
+                "file": "/home/encrypted/epinheiro/Documentos/robcdcc/src/loglikelihoodCDCC.cpp",
+                "line": 228,
+                "column": 10
+            }
+        ]
+    },
+    {
+        "file": "/home/encrypted/epinheiro/Documentos/robcdcc/src/robust_loglikelihoodCDCC.cpp",
+        "file_last_write": 1626140533.0,
+        "definitions": [
+            {
+                "usr": "c:@F@my_rank#$@N@arma@S@Col>#d#",
+                "kind": 6,
+                "parent_name": "",
+                "name": "my_rank(arma::vec)",
+                "file": "/home/encrypted/epinheiro/Documentos/robcdcc/src/robust_loglikelihoodCDCC.cpp",
+                "line": 10,
+                "column": 11
+            },
+            {
+                "usr": "c:@F@spearman_corr#$@N@arma@S@Mat>#d#I#",
+                "kind": 6,
+                "parent_name": "",
+                "name": "spearman_corr(arma::mat, int)",
+                "file": "/home/encrypted/epinheiro/Documentos/robcdcc/src/robust_loglikelihoodCDCC.cpp",
+                "line": 21,
+                "column": 11
+            },
+            {
+                "usr": "c:@F@corr_reweighted_C#$@N@arma@S@Mat>#d#I#",
+                "kind": 6,
+                "parent_name": "",
+                "name": "corr_reweighted_C(arma::mat, int)",
+                "file": "/home/encrypted/epinheiro/Documentos/robcdcc/src/robust_loglikelihoodCDCC.cpp",
+                "line": 61,
+                "column": 11
+            },
+            {
+                "usr": "c:@F@rho#d#",
+                "kind": 6,
+                "parent_name": "",
+                "name": "rho(double)",
+                "file": "/home/encrypted/epinheiro/Documentos/robcdcc/src/robust_loglikelihoodCDCC.cpp",
+                "line": 115,
+                "column": 8
+            },
+            {
+                "usr": "c:@F@rc#d#d#",
+                "kind": 6,
+                "parent_name": "",
+                "name": "rc(double, double)",
+                "file": "/home/encrypted/epinheiro/Documentos/robcdcc/src/robust_loglikelihoodCDCC.cpp",
+                "line": 121,
+                "column": 8
+            },
+            {
+                "usr": "c:@F@robust_loglikelihoodCDCC_C#d#d#$@N@arma@S@Mat>#d#I#d#d#d#d#",
+                "kind": 6,
+                "parent_name": "",
+                "name": "robust_loglikelihoodCDCC_C(double, double, arma::mat, int, double, double, double, double)",
+                "file": "/home/encrypted/epinheiro/Documentos/robcdcc/src/robust_loglikelihoodCDCC.cpp",
+                "line": 135,
+                "column": 8
+            },
+            {
+                "usr": "c:@F@robust_compositeCDCC_C#d#d#$@N@arma@S@Mat>#d#I#I#d#d#d#d#",
+                "kind": 6,
+                "parent_name": "",
+                "name": "robust_compositeCDCC_C(double, double, arma::mat, int, int, double, double, double, double)",
+                "file": "/home/encrypted/epinheiro/Documentos/robcdcc/src/robust_loglikelihoodCDCC.cpp",
+                "line": 230,
+                "column": 8
+            },
+            {
+                "usr": "c:@F@robust_calc_Qs#$@N@arma@S@Col>#d#$@N@arma@S@Mat>#d#d#d#",
+                "kind": 6,
+                "parent_name": "",
+                "name": "robust_calc_Qs(arma::vec, arma::mat, double, double)",
+                "file": "/home/encrypted/epinheiro/Documentos/robcdcc/src/robust_loglikelihoodCDCC.cpp",
+                "line": 249,
+                "column": 11
+            },
+            {
+                "usr": "c:@F@robust_calc_portfolio_variance#$@N@arma@S@Col>#d#S0_#$@N@arma@S@Mat>#d#S1_#S1_#S1_#d#d#",
+                "kind": 6,
+                "parent_name": "",
+                "name": "robust_calc_portfolio_variance(arma::vec, arma::vec, arma::mat, arma::mat, arma::mat, arma::mat, double, double)",
+                "file": "/home/encrypted/epinheiro/Documentos/robcdcc/src/robust_loglikelihoodCDCC.cpp",
+                "line": 283,
+                "column": 8
+            }
+        ]
+    },
+    {
+        "file": "/home/encrypted/epinheiro/Documentos/robcdcc/src/simCDCC_C.cpp",
+        "file_last_write": 1624124374.0,
+        "definitions": [
+            {
+                "usr": "c:@F@set_seed#d#",
+                "kind": 6,
+                "parent_name": "",
+                "name": "set_seed(double)",
+                "file": "/home/encrypted/epinheiro/Documentos/robcdcc/src/simCDCC_C.cpp",
+                "line": 11,
+                "column": 6
+            },
+            {
+                "usr": "c:@F@mvrnormArma#I#$@N@arma@S@Mat>#d#",
+                "kind": 6,
+                "parent_name": "",
+                "name": "mvrnormArma(int, arma::mat)",
+                "file": "/home/encrypted/epinheiro/Documentos/robcdcc/src/simCDCC_C.cpp",
+                "line": 18,
+                "column": 11
+            },
+            {
+                "usr": "c:@F@simCDCC_C#$@N@arma@S@Col>#d#$@N@arma@S@Mat>#d#I#d#",
+                "kind": 6,
+                "parent_name": "",
+                "name": "simCDCC_C(arma::vec, arma::mat, int, double)",
+                "file": "/home/encrypted/epinheiro/Documentos/robcdcc/src/simCDCC_C.cpp",
+                "line": 27,
+                "column": 11
+            }
+        ]
+    }
+]
