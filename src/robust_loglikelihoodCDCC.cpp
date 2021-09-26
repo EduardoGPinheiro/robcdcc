@@ -84,10 +84,10 @@ arma::mat corr_reweighted_C(arma::mat St, int nobs){
     }
     
     Ct =  spearman_corr(St.rows(windows(t,0), windows(t,1)), 30 + 1);
-    SCt = 2 * sin((3.141593 / 6) * Ct);
+    SCt = 2 * arma::sin((3.141593 / 6) * Ct);
     cond = (St.rows(t,t) * inv(SCt) * St.rows(t,t).t()).eval()(0,0); 
     
-    if(cond <= 5.991465){
+    if(cond <= 7.377759){
       Lt(t,0) = 1;
     }else{
       Lt(t,0) = 0;
@@ -103,10 +103,10 @@ arma::mat corr_reweighted_C(arma::mat St, int nobs){
   RC = (1.0257 / den) * RC;
   
   for(int i=0; i < 2; i++){
-    diagRC(i,i) = sqrt(1/RC(i,i)); 
+    diagRC(i,i) = sqrt(1/RC(i,i));
   }
-  
-  S = diagRC * RC * diagRC;
+
+  S = diagmat(diagRC) * RC * diagmat(diagRC);
   
   return S;
 }
@@ -148,27 +148,16 @@ double robust_loglikelihoodCDCC_C(double alpha, double beta, arma::mat rt,
   
   NumericVector Q11(nobs);
   NumericVector Q22(nobs);
-  NumericVector Q12(nobs);
-  
-  NumericVector R11(nobs);
-  NumericVector R22(nobs);
-  NumericVector R12(nobs);
-  
-  NumericVector IR11(nobs);
-  NumericVector IR22(nobs);
-  NumericVector IR12(nobs);
-  
+
   Q11[0] = 1.0;
   Q22[0] = 1.0;
-  Q12[0] = 0;
-  
-  R11[0] = 1.0;
-  R22[0] = 1.0;
-  R12[0] = 0;
-  
-  IR11[0] = 1.0;
-  IR22[0] = 1.0;
-  IR12[0] = 0;
+
+  arma::mat Qt = eye(2, 2);
+  arma::mat Rt = eye(2, 2); 
+  arma::mat IRt = eye(2, 2);
+  arma::mat Qs = eye(2, 2);
+  arma::mat IQs = eye(2, 2); 
+  arma::mat rr = eye(2, 2); 
   
   r11 = rt(0,0) * rt(0,0);
   r22 = rt(0,1) * rt(0,1);
@@ -189,37 +178,26 @@ double robust_loglikelihoodCDCC_C(double alpha, double beta, arma::mat rt,
   S = corr_reweighted_C(rts, nobs);
   S0 = (1-alpha-beta) * S;
   
-  Q12[0] = S(0,1);
-  R12[0] = S(0,1);
+  Qt = S;
+  Rt = S;
+  IRt = arma::inv(S);
   
-  for(int t=0; t < (nobs-1); t++){
-    detRt = 1.0 - R12[t] * R12[t];
+  for(int t=0; t < nobs; t++){
+    rr = rt.row(t).t() * rt.row(t);
+    dt = (rt.row(t) * IRt * rt.row(t).t()).eval()(0,0);
+    lkh += log(arma::det(Rt)) + 0.8258 * rho(dt); 
     
-    IR11[t] = 1.0 / detRt;
-    IR22[t] = 1.0 / detRt;
-    IR12[t] = -R12[t] / detRt;
+    Qt = S0 + 
+      alpha * cy2 * rc(dt, chisq2) * diagmat(Qs) * rr * diagmat(Qs) +
+      beta * Qt; 
     
-    dt = rt(t,0) * rt(t,0) * IR11[t] + 
-      2.0 * rt(t,0) * rt(t,1) * IR12[t] + 
-      rt(t,1) * rt(t,1) * IR22[t];
-    lkh += log(detRt) + .8258 * rho(dt);
+    for(int i=0; i < 2; i++){
+        Qs(i,i) = sqrt(Qt(i,i)); 
+        IQs(i,i) = 1.0 / Qs(i,i);
+      }
     
-    Q12[t+1] = S0(0,1) + 
-      alpha * cy2 * rc(dt, chisq2) * (sqrt(Q11[t] * Q22[t]) * rt(t,0) * rt(t,1)) + 
-      beta * Q12[t];
-    
-    Q11[t+1] = intercepto + 
-      alpha * cy2 * rc(dt, chisq2) * (rt(t,0) * rt(t,0)) * Q11[t] + 
-      beta * Q11[t]; 
-
-    Q22[t+1] = intercepto + 
-      alpha * cy2 * rc(dt, chisq2) * (rt(t,1) * rt(t,1)) * Q22[t] + 
-      beta * Q22[t]; 
-    
-    R12[t+1] = Q12[t+1] / sqrt(Q11[t+1] * Q22[t+1]); 
-    R11[t+1] = 1.0;
-    R22[t+1] = 1.0;
-    
+    Rt = diagmat(IQs) * Qt * diagmat(IQs);
+    IRt = arma::inv(Rt);
   }
   
   return(lkh / nobs);
