@@ -18,7 +18,9 @@ arma::vec my_rank(arma::vec v){
 }
 
 // [[Rcpp::depends("RcppArmadillo")]]
-arma::mat spearman_corr(arma::mat St, int nobs){
+// [[Rcpp::export]]
+arma::mat spearman_corr(arma::mat St){
+  int nobs = St.n_rows;
   
   mat mrho = zeros(2, 2);
   mat rank_windows = zeros(nobs, 2);
@@ -58,7 +60,9 @@ arma::mat spearman_corr(arma::mat St, int nobs){
 
 // [[Rcpp::depends("RcppArmadillo")]]
 // [[Rcpp::export]]
-arma::mat corr_reweighted_C(arma::mat St, int nobs){
+arma::mat corr_reweighted_C(arma::mat St, double chisq2, double cy2){
+  int nobs = St.n_rows;
+  
   mat windows = zeros(nobs, 2);
   mat Ct = zeros(2, 2);
   mat SCt = zeros(2, 2);
@@ -83,11 +87,11 @@ arma::mat corr_reweighted_C(arma::mat St, int nobs){
     }
     }
     
-    Ct =  spearman_corr(St.rows(windows(t,0), windows(t,1)), 30 + 1);
+    Ct =  spearman_corr(St.rows(windows(t,0), windows(t,1)));
     SCt = 2 * arma::sin((3.141593 / 6) * Ct);
-    cond = (St.rows(t,t) * inv(SCt) * St.rows(t,t).t()).eval()(0,0); 
+    cond = (St.row(t) * inv(SCt) * St.row(t).t()).eval()(0,0); 
     
-    if(cond <= 7.377759){
+    if(cond <= chisq2){
       Lt(t,0) = 1;
     }else{
       Lt(t,0) = 0;
@@ -97,10 +101,10 @@ arma::mat corr_reweighted_C(arma::mat St, int nobs){
   }
   
   for(int t=0; t < nobs; t++){
-    RC += (St.rows(t,t).t() * St.rows(t,t) * Lt(t,0));
+    RC += (St.row(t).t() * St.row(t) * Lt(t,0));
   }
   
-  RC = (1.0257 / den) * RC;
+  RC = (cy2 / den) * RC;
   
   for(int i=0; i < 2; i++){
     diagRC(i,i) = sqrt(1/RC(i,i));
@@ -175,7 +179,7 @@ double robust_loglikelihoodCDCC_C(double alpha, double beta, arma::mat rt,
     r22 = rt(t,1) * rt(t,1);
   }
   
-  S = corr_reweighted_C(rts, nobs);
+  S = corr_reweighted_C(rts, chisq2, cy2);
   S0 = (1-alpha-beta) * S;
   
   Qt = S;

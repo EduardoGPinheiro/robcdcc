@@ -32,8 +32,12 @@ calc_portfolio_variance <- function(phi, hat_phi, rt, cont_rt, S, hat_S) {
     .Call(`_robcdcc_calc_portfolio_variance`, phi, hat_phi, rt, cont_rt, S, hat_S)
 }
 
-corr_reweighted_C <- function(St, nobs) {
-    .Call(`_robcdcc_corr_reweighted_C`, St, nobs)
+spearman_corr <- function(St) {
+    .Call(`_robcdcc_spearman_corr`, St)
+}
+
+corr_reweighted_C <- function(St, chisq2, cy2) {
+    .Call(`_robcdcc_corr_reweighted_C`, St, chisq2, cy2)
 }
 
 robust_compositeCDCC_C <- function(alpha, beta, St, nobs, ndim, cy1, chisq1, cy2, chisq2) {

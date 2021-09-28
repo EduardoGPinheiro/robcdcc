@@ -111,15 +111,27 @@ BEGIN_RCPP
     return rcpp_result_gen;
 END_RCPP
 }
-// corr_reweighted_C
-arma::mat corr_reweighted_C(arma::mat St, int nobs);
-RcppExport SEXP _robcdcc_corr_reweighted_C(SEXP StSEXP, SEXP nobsSEXP) {
+// spearman_corr
+arma::mat spearman_corr(arma::mat St);
+RcppExport SEXP _robcdcc_spearman_corr(SEXP StSEXP) {
 BEGIN_RCPP
     Rcpp::RObject rcpp_result_gen;
     Rcpp::RNGScope rcpp_rngScope_gen;
     Rcpp::traits::input_parameter< arma::mat >::type St(StSEXP);
-    Rcpp::traits::input_parameter< int >::type nobs(nobsSEXP);
-    rcpp_result_gen = Rcpp::wrap(corr_reweighted_C(St, nobs));
+    rcpp_result_gen = Rcpp::wrap(spearman_corr(St));
+    return rcpp_result_gen;
+END_RCPP
+}
+// corr_reweighted_C
+arma::mat corr_reweighted_C(arma::mat St, double chisq2, double cy2);
+RcppExport SEXP _robcdcc_corr_reweighted_C(SEXP StSEXP, SEXP chisq2SEXP, SEXP cy2SEXP) {
+BEGIN_RCPP
+    Rcpp::RObject rcpp_result_gen;
+    Rcpp::RNGScope rcpp_rngScope_gen;
+    Rcpp::traits::input_parameter< arma::mat >::type St(StSEXP);
+    Rcpp::traits::input_parameter< double >::type chisq2(chisq2SEXP);
+    Rcpp::traits::input_parameter< double >::type cy2(cy2SEXP);
+    rcpp_result_gen = Rcpp::wrap(corr_reweighted_C(St, chisq2, cy2));
     return rcpp_result_gen;
 END_RCPP
 }
@@ -197,7 +209,8 @@ static const R_CallMethodDef CallEntries[] = {
     {"_robcdcc_calc_Rt_C", (DL_FUNC) &_robcdcc_calc_Rt_C, 4},
     {"_robcdcc_calc_Qs", (DL_FUNC) &_robcdcc_calc_Qs, 2},
     {"_robcdcc_calc_portfolio_variance", (DL_FUNC) &_robcdcc_calc_portfolio_variance, 6},
-    {"_robcdcc_corr_reweighted_C", (DL_FUNC) &_robcdcc_corr_reweighted_C, 2},
+    {"_robcdcc_spearman_corr", (DL_FUNC) &_robcdcc_spearman_corr, 1},
+    {"_robcdcc_corr_reweighted_C", (DL_FUNC) &_robcdcc_corr_reweighted_C, 3},
     {"_robcdcc_robust_compositeCDCC_C", (DL_FUNC) &_robcdcc_robust_compositeCDCC_C, 9},
     {"_robcdcc_robust_calc_Qs", (DL_FUNC) &_robcdcc_robust_calc_Qs, 4},
     {"_robcdcc_robust_calc_portfolio_variance", (DL_FUNC) &_robcdcc_robust_calc_portfolio_variance, 8},
