@@ -179,7 +179,7 @@ double robust_loglikelihoodCDCC_C(double alpha, double beta, arma::mat rt,
     r22 = rt(t,1) * rt(t,1);
   }
   
-  S = corr_reweighted_C(rts, chisq2, cy2);
+  S = corr_reweighted_C(rts, 5.991465, 1.0526);
   S0 = (1-alpha-beta) * S;
   
   Qt = S;
