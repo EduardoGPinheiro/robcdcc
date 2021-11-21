@@ -1,7 +1,7 @@
 [
     {
         "file": "/home/encrypted/epinheiro/Documentos/robcdcc/src/general_portoflio_var.cpp",
-        "file_last_write": 1632090525.0,
+        "file_last_write": 1636073095.0,
         "definitions": [
             {
                 "usr": "c:@F@rc2#d#d#",
@@ -29,12 +29,21 @@
                 "file": "/home/encrypted/epinheiro/Documentos/robcdcc/src/general_portoflio_var.cpp",
                 "line": 196,
                 "column": 8
+            },
+            {
+                "usr": "c:@F@qmvn_calc_portfolio_variance#$@N@arma@S@Col>#d#S0_#$@N@arma@S@Mat>#d#S1_#S1_#S1_#S1_#",
+                "kind": 6,
+                "parent_name": "",
+                "name": "qmvn_calc_portfolio_variance(arma::vec, arma::vec, arma::mat, arma::mat, arma::mat, arma::mat, arma::mat)",
+                "file": "/home/encrypted/epinheiro/Documentos/robcdcc/src/general_portoflio_var.cpp",
+                "line": 248,
+                "column": 11
             }
         ]
     },
     {
         "file": "/home/encrypted/epinheiro/Documentos/robcdcc/src/loglikelihoodCDCC.cpp",
-        "file_last_write": 1626128510.0,
+        "file_last_write": 1635986269.0,
         "definitions": [
             {
                 "usr": "c:@F@unconditional_correlation#$@N@arma@S@Mat>#d#I#",
@@ -46,21 +55,21 @@
                 "column": 13
             },
             {
-                "usr": "c:@F@loglikelihoodCDCC_C#d#d#$@N@arma@S@Mat>#d#S0_#I#",
+                "usr": "c:@F@loglikelihoodCDCC_C#d#d#$@N@arma@S@Mat>#d#I#",
                 "kind": 6,
                 "parent_name": "",
-                "name": "loglikelihoodCDCC_C(double, double, arma::mat, arma::mat, int)",
+                "name": "loglikelihoodCDCC_C(double, double, arma::mat, int)",
                 "file": "/home/encrypted/epinheiro/Documentos/robcdcc/src/loglikelihoodCDCC.cpp",
                 "line": 34,
                 "column": 10
             },
             {
-                "usr": "c:@F@compositeCDCC_C#d#d#$@N@arma@S@Mat>#d#S0_#I#I#",
+                "usr": "c:@F@compositeCDCC_C#d#d#$@N@arma@S@Mat>#d#I#I#",
                 "kind": 6,
                 "parent_name": "",
-                "name": "compositeCDCC_C(double, double, arma::mat, arma::mat, int, int)",
+                "name": "compositeCDCC_C(double, double, arma::mat, int, int)",
                 "file": "/home/encrypted/epinheiro/Documentos/robcdcc/src/loglikelihoodCDCC.cpp",
-                "line": 109,
+                "line": 107,
                 "column": 10
             },
             {
@@ -69,7 +78,7 @@
                 "parent_name": "",
                 "name": "calc_Rt_C(double, double, arma::mat, int)",
                 "file": "/home/encrypted/epinheiro/Documentos/robcdcc/src/loglikelihoodCDCC.cpp",
-                "line": 127,
+                "line": 123,
                 "column": 13
             },
             {
@@ -78,17 +87,32 @@
                 "parent_name": "",
                 "name": "calc_Qs(arma::vec, arma::mat)",
                 "file": "/home/encrypted/epinheiro/Documentos/robcdcc/src/loglikelihoodCDCC.cpp",
-                "line": 195,
+                "line": 191,
                 "column": 13
-            },
+            }
+        ]
+    },
+    {
+        "file": "/home/encrypted/epinheiro/Documentos/robcdcc/src/loglikelihoodGARCH.cpp",
+        "file_last_write": 1635691762.0,
+        "definitions": [
             {
-                "usr": "c:@F@calc_portfolio_variance#$@N@arma@S@Col>#d#S0_#$@N@arma@S@Mat>#d#S1_#S1_#S1_#",
+                "usr": "c:@F@loglikelihoodGARCH_C#d#d#$@N@Rcpp@S@Vector>#VI14#@N@Rcpp@ST>1#T@PreserveStorage#I#d#",
                 "kind": 6,
                 "parent_name": "",
-                "name": "calc_portfolio_variance(arma::vec, arma::vec, arma::mat, arma::mat, arma::mat, arma::mat)",
-                "file": "/home/encrypted/epinheiro/Documentos/robcdcc/src/loglikelihoodCDCC.cpp",
-                "line": 228,
-                "column": 10
+                "name": "loglikelihoodGARCH_C(double, double, Rcpp::NumericVector, int, double)",
+                "file": "/home/encrypted/epinheiro/Documentos/robcdcc/src/loglikelihoodGARCH.cpp",
+                "line": 8,
+                "column": 8
+            },
+            {
+                "usr": "c:@F@calc_ht_C#d#d#d#$@N@Rcpp@S@Vector>#VI14#@N@Rcpp@ST>1#T@PreserveStorage#I#",
+                "kind": 6,
+                "parent_name": "",
+                "name": "calc_ht_C(double, double, double, Rcpp::NumericVector, int)",
+                "file": "/home/encrypted/epinheiro/Documentos/robcdcc/src/loglikelihoodGARCH.cpp",
+                "line": 23,
+                "column": 15
             }
         ]
     },
@@ -176,6 +200,48 @@
                 "file": "/home/encrypted/epinheiro/Documentos/robcdcc/src/robust_loglikelihoodCDCC.cpp",
                 "line": 265,
                 "column": 8
+            }
+        ]
+    },
+    {
+        "file": "/home/encrypted/epinheiro/Documentos/robcdcc/src/robust_loglikelihoodGARCH.cpp",
+        "file_last_write": 1635716942.0,
+        "definitions": [
+            {
+                "usr": "c:@F@rho_g#d#",
+                "kind": 6,
+                "parent_name": "",
+                "name": "rho_g(double)",
+                "file": "/home/encrypted/epinheiro/Documentos/robcdcc/src/robust_loglikelihoodGARCH.cpp",
+                "line": 8,
+                "column": 8
+            },
+            {
+                "usr": "c:@F@rc_g#d#d#",
+                "kind": 6,
+                "parent_name": "",
+                "name": "rc_g(double, double)",
+                "file": "/home/encrypted/epinheiro/Documentos/robcdcc/src/robust_loglikelihoodGARCH.cpp",
+                "line": 14,
+                "column": 8
+            },
+            {
+                "usr": "c:@F@robust_loglikelihoodGARCH_C#d#d#$@N@Rcpp@S@Vector>#VI14#@N@Rcpp@ST>1#T@PreserveStorage#I#d#d#d#",
+                "kind": 6,
+                "parent_name": "",
+                "name": "robust_loglikelihoodGARCH_C(double, double, Rcpp::NumericVector, int, double, double, double)",
+                "file": "/home/encrypted/epinheiro/Documentos/robcdcc/src/robust_loglikelihoodGARCH.cpp",
+                "line": 27,
+                "column": 8
+            },
+            {
+                "usr": "c:@F@robust_calc_ht_C#d#d#d#$@N@Rcpp@S@Vector>#VI14#@N@Rcpp@ST>1#T@PreserveStorage#I#d#d#",
+                "kind": 6,
+                "parent_name": "",
+                "name": "robust_calc_ht_C(double, double, double, Rcpp::NumericVector, int, double, double)",
+                "file": "/home/encrypted/epinheiro/Documentos/robcdcc/src/robust_loglikelihoodGARCH.cpp",
+                "line": 50,
+                "column": 15
             }
         ]
     },
