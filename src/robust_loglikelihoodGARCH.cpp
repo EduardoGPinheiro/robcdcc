@@ -54,12 +54,13 @@ NumericVector robust_calc_ht_C(double omega,
                                int nobs,
                                double cy, 
                                double chisq){
-  NumericVector ht(nobs);
+  NumericVector ht(nobs+1);
 
   ht[0] = omega / (1-alpha1-beta1);
   
-  for(int t=0; t < (nobs-1); t++){
-    ht[t+1] = omega + alpha1 * cy * rc_g(pow(rt[t], 2.0) / ht[t], chisq) * pow(rt[t], 2.0) +
+  for(int t=0; t < nobs; t++){
+    ht[t+1] = omega + 
+      alpha1 * cy * rc_g(pow(rt[t], 2.0) / ht[t], chisq) * pow(rt[t], 2.0) +
       beta1 * ht[t];
   }
   

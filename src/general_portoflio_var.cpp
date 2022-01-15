@@ -26,6 +26,8 @@ arma::vec geral_calc_portfolio_variance(arma::vec phi,
                                         arma::mat rt, arma::mat burn_rt,
                                         arma::mat cont_rt,
                                         arma::mat S, 
+                                        arma::mat Dt, arma::mat q_Dt, 
+                                        arma::mat r_Dt,
                                         arma::mat q_S, arma::mat r_S,
                                         double cy2, double chisq2){
   int nobs = rt.n_rows;
@@ -57,19 +59,24 @@ arma::vec geral_calc_portfolio_variance(arma::vec phi,
   arma::mat Q = S;
   arma::mat Qs = eye(ndim, ndim);
   arma::mat Rt = S;
-  arma::mat IRt = S;
+  arma::mat Ht = S;
+  arma::mat IHt = S;
   arma::mat IQs = eye(ndim, ndim);
   
   arma::mat q_Q = q_S;
   arma::mat q_Qs = eye(ndim, ndim);
   arma::mat q_Rt = q_S;
+  arma::mat q_Ht = q_S;
   arma::mat q_IRt = arma::inv(q_Rt); 
+  arma::mat q_IHt = arma::inv(q_Ht); 
   arma::mat q_IQs = eye(ndim, ndim);
   
   arma::mat r_Q = r_S;
   arma::mat r_Qs = eye(ndim, ndim);
   arma::mat r_Rt = r_S;
-  arma::mat r_IRt = arma::inv(r_Rt); 
+  arma::mat r_Ht = r_S;
+  arma::mat r_IRt = arma::inv(r_Rt);
+  arma::mat r_IHt = arma::inv(r_Ht); 
   arma::mat r_IQs = eye(ndim, ndim);
   
   arma::mat rr(ndim, ndim);
@@ -147,38 +154,43 @@ arma::vec geral_calc_portfolio_variance(arma::vec phi,
     }
     
     r_Rt = diagmat(r_IQs) * r_Q * diagmat(r_IQs);
-    
+    r_IRt = arma::inv(r_Rt);
+      
     //    Rcout << "q_diag : " << q_test_diag / ndim << "in" << t<<"\n";
     //    Rcout << "r_diag : " << q_test_diag / ndim << "in" << t<<"\n";
   }
   
   // calculating excess portfolio variance
-  q_IRt = arma::inv(q_Rt); 
-  r_IRt = arma::inv(r_Rt);
-  IRt = arma::inv(Rt); 
+  q_Ht = q_Dt * q_Rt * q_Dt;
+  r_Ht = r_Dt * r_Rt * r_Dt;
+  Ht = Dt * Rt * Dt;
   
-  q_port_num = trace(q_IRt * Rt * q_IRt) / ndim;
-  q_port_denom = (trace(q_IRt) / ndim) * (trace(q_IRt) / ndim);
+  q_IHt = arma::inv(q_Ht); 
+  r_IHt = arma::inv(r_Ht);
+  IHt = arma::inv(Ht); 
   
-  r_port_num = trace(r_IRt * Rt * r_IRt) / ndim;
-  r_port_denom = (trace(r_IRt) / ndim) * (trace(r_IRt) / ndim);
+  q_port_num = trace(q_IHt * Ht * q_IHt) / ndim;
+  q_port_denom = (trace(q_IHt) / ndim) * (trace(q_IHt) / ndim);
+  
+  r_port_num = trace(r_IHt * Ht * r_IHt) / ndim;
+  r_port_denom = (trace(r_IHt) / ndim) * (trace(r_IHt) / ndim);
   
   q_port_var = q_port_num / q_port_denom;
   r_port_var = r_port_num / r_port_denom;
   
   // calculate Frobenius loss function
-  q_fro = norm(q_Rt - Rt, "fro");
-  r_fro = norm(r_Rt - Rt, "fro"); 
+  q_fro = norm(q_Ht - Ht, "fro");
+  r_fro = norm(r_Ht - Ht, "fro"); 
   
   // calculate hat weights
-  q_hat_w = (q_IRt * ones_vec) / (ones_vec.t() * q_IRt * ones_vec).eval()(0,0);
-  r_hat_w = (r_IRt * ones_vec) / (ones_vec.t() * r_IRt * ones_vec).eval()(0,0);
-  w = (IRt * ones_vec) / (ones_vec.t() * IRt * ones_vec).eval()(0,0);
+  q_hat_w = (q_IHt * ones_vec) / (ones_vec.t() * q_IHt * ones_vec).eval()(0,0);
+  r_hat_w = (r_IHt * ones_vec) / (ones_vec.t() * r_IHt * ones_vec).eval()(0,0);
+  w = (IHt * ones_vec) / (ones_vec.t() * IHt * ones_vec).eval()(0,0);
   
   // Calculate variance in GMV
-  gmv = (w.t() * Rt * w).eval()(0,0);
-  q_gmv = (q_hat_w.t() * Rt * q_hat_w).eval()(0,0);
-  r_gmv = (r_hat_w.t() * Rt * r_hat_w).eval()(0,0);
+  gmv = (w.t() * Ht * w).eval()(0,0);
+  q_gmv = (q_hat_w.t() * Ht * q_hat_w).eval()(0,0);
+  r_gmv = (r_hat_w.t() * Ht * r_hat_w).eval()(0,0);
   
   results(0) = q_port_var;
   results(1) = r_port_var;

@@ -228,8 +228,8 @@ double robust_compositeCDCC_C(double alpha, double beta, arma::mat St,
 
 // [[Rcpp::depends("RcppArmadillo")]]
 // [[Rcpp::export]]
-arma::mat robust_calc_Qs(arma::vec phi, arma::mat rt, 
-                         double cy1, double chisq1){
+arma::mat robust_calc_Qs_C(arma::vec phi, arma::mat rt, 
+                           double cy1, double chisq1){
   int nobs = rt.n_rows;
   int ndim = rt.n_cols;
   
@@ -259,48 +259,36 @@ arma::mat robust_calc_Qs(arma::vec phi, arma::mat rt,
   return rts;
 } 
 
-
 // [[Rcpp::depends("RcppArmadillo")]]
 // [[Rcpp::export]]
-double robust_calc_portfolio_variance(arma::vec phi, arma::vec hat_phi, 
-                                      arma::mat rt, arma::mat cont_rt,
-                                      arma::mat S, arma::mat hat_S,
-                                      double cy2, double chisq2){
+arma::mat robust_calc_Rt_C(arma::vec phi,  
+                           arma::mat rt, 
+                           arma::mat S,
+                           double cy2, double chisq2){
   int nobs = rt.n_rows;
   int ndim = rt.n_cols;
-  
+ 
   double a = phi[0];
   double b = phi[1];
   
-  double hat_a = hat_phi[0];
-  double hat_b = hat_phi[1];
-  
   double dt = 0;
   double intercepto = 1-a-b;
-  double hat_intercepto = 1-hat_a-hat_b;
-  double port_num = 0;
-  double port_denom = 0; 
-  double port_var = 0;
   
-  arma::mat Q = S;
   arma::mat Qs = eye(ndim, ndim);
+  arma::mat Q = S;
   arma::mat Rt = S;
-  arma::mat IRt = S;
+  arma::mat IRt = arma::inv(Rt); 
   arma::mat IQs = eye(ndim, ndim);
   
-  arma::mat hat_Q = hat_S;
-  arma::mat hat_Qs = eye(ndim, ndim);
-  arma::mat hat_Rt = hat_S;
-  arma::mat hat_IRt = arma::inv_sympd(hat_Rt); 
-  arma::mat hat_IQs = eye(ndim, ndim);
-  
   arma::mat rr(ndim, ndim);
-  arma::mat cont_rr(ndim, ndim);
-  
+
   for(int t=0; t < nobs; t++){
-    // Known Ht
+    rr = rt.row(t).t() * rt.row(t); 
+    dt = (rt.row(t) * IRt * rt.row(t).t()).eval()(0,0);
+    
+    // Robust
     Q = intercepto * S + 
-      a * diagmat(Qs) * rr * diagmat(Qs) + 
+      a * cy2 * rc(dt, chisq2) * diagmat(Qs) * rr * diagmat(Qs) + 
       b * Q;
     
     for(int i=0; i < ndim; i++){
@@ -309,32 +297,9 @@ double robust_calc_portfolio_variance(arma::vec phi, arma::vec hat_phi,
     }
     
     Rt = diagmat(IQs) * Q * diagmat(IQs);
-    rr = rt.row(t).t() * rt.row(t); 
-    
-    // Estimated Ht
-    dt = (cont_rt.row(t) * hat_IRt * cont_rt.row(t).t()).eval()(0,0);
-    
-    hat_Q = hat_intercepto * hat_S + 
-      hat_a * cy2 * rc(dt, chisq2) * diagmat(hat_Qs) * cont_rr * diagmat(hat_Qs) + 
-      hat_b * hat_Q;
-    
-    for(int i=0; i < ndim; i++){
-      hat_Qs(i,i) = sqrt(hat_Q(i,i));
-      hat_IQs(i,i) = 1.0 / hat_Qs(i,i);
-    }
-    
-    hat_Rt = diagmat(hat_IQs) * hat_Q * diagmat(hat_IQs);
-    cont_rr= cont_rt.row(t).t() * cont_rt.row(t);
-    
-    // calculating excess portfolio variance
-    hat_IRt = arma::inv(hat_Rt); 
-    
-    port_num = trace(hat_IRt * Rt * hat_IRt) / ndim;
-    port_denom = (trace(hat_IRt) / ndim) * (trace(hat_IRt) / ndim);
-    
-    port_var+= port_num / port_denom;    
-    }
-  
-  return port_var / nobs;;
-} 
+    IRt = arma::inv(Rt);
+  }
 
+  return Rt;
+}
+  

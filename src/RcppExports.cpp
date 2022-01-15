@@ -6,9 +6,14 @@
 
 using namespace Rcpp;
 
+#ifdef RCPP_USE_GLOBAL_ROSTREAM
+Rcpp::Rostream<true>&  Rcpp::Rcout = Rcpp::Rcpp_cout_get();
+Rcpp::Rostream<false>& Rcpp::Rcerr = Rcpp::Rcpp_cerr_get();
+#endif
+
 // geral_calc_portfolio_variance
-arma::vec geral_calc_portfolio_variance(arma::vec phi, arma::vec q_phi, arma::vec r_phi, arma::mat rt, arma::mat burn_rt, arma::mat cont_rt, arma::mat S, arma::mat q_S, arma::mat r_S, double cy2, double chisq2);
-RcppExport SEXP _robcdcc_geral_calc_portfolio_variance(SEXP phiSEXP, SEXP q_phiSEXP, SEXP r_phiSEXP, SEXP rtSEXP, SEXP burn_rtSEXP, SEXP cont_rtSEXP, SEXP SSEXP, SEXP q_SSEXP, SEXP r_SSEXP, SEXP cy2SEXP, SEXP chisq2SEXP) {
+arma::vec geral_calc_portfolio_variance(arma::vec phi, arma::vec q_phi, arma::vec r_phi, arma::mat rt, arma::mat burn_rt, arma::mat cont_rt, arma::mat S, arma::mat Dt, arma::mat q_Dt, arma::mat r_Dt, arma::mat q_S, arma::mat r_S, double cy2, double chisq2);
+RcppExport SEXP _robcdcc_geral_calc_portfolio_variance(SEXP phiSEXP, SEXP q_phiSEXP, SEXP r_phiSEXP, SEXP rtSEXP, SEXP burn_rtSEXP, SEXP cont_rtSEXP, SEXP SSEXP, SEXP DtSEXP, SEXP q_DtSEXP, SEXP r_DtSEXP, SEXP q_SSEXP, SEXP r_SSEXP, SEXP cy2SEXP, SEXP chisq2SEXP) {
 BEGIN_RCPP
     Rcpp::RObject rcpp_result_gen;
     Rcpp::RNGScope rcpp_rngScope_gen;
@@ -19,11 +24,14 @@ BEGIN_RCPP
     Rcpp::traits::input_parameter< arma::mat >::type burn_rt(burn_rtSEXP);
     Rcpp::traits::input_parameter< arma::mat >::type cont_rt(cont_rtSEXP);
     Rcpp::traits::input_parameter< arma::mat >::type S(SSEXP);
+    Rcpp::traits::input_parameter< arma::mat >::type Dt(DtSEXP);
+    Rcpp::traits::input_parameter< arma::mat >::type q_Dt(q_DtSEXP);
+    Rcpp::traits::input_parameter< arma::mat >::type r_Dt(r_DtSEXP);
     Rcpp::traits::input_parameter< arma::mat >::type q_S(q_SSEXP);
     Rcpp::traits::input_parameter< arma::mat >::type r_S(r_SSEXP);
     Rcpp::traits::input_parameter< double >::type cy2(cy2SEXP);
     Rcpp::traits::input_parameter< double >::type chisq2(chisq2SEXP);
-    rcpp_result_gen = Rcpp::wrap(geral_calc_portfolio_variance(phi, q_phi, r_phi, rt, burn_rt, cont_rt, S, q_S, r_S, cy2, chisq2));
+    rcpp_result_gen = Rcpp::wrap(geral_calc_portfolio_variance(phi, q_phi, r_phi, rt, burn_rt, cont_rt, S, Dt, q_Dt, r_Dt, q_S, r_S, cy2, chisq2));
     return rcpp_result_gen;
 END_RCPP
 }
@@ -85,20 +93,6 @@ BEGIN_RCPP
     return rcpp_result_gen;
 END_RCPP
 }
-// calc_Rt_C
-arma::mat calc_Rt_C(double alpha, double beta, arma::mat epsilon, int nobs);
-RcppExport SEXP _robcdcc_calc_Rt_C(SEXP alphaSEXP, SEXP betaSEXP, SEXP epsilonSEXP, SEXP nobsSEXP) {
-BEGIN_RCPP
-    Rcpp::RObject rcpp_result_gen;
-    Rcpp::RNGScope rcpp_rngScope_gen;
-    Rcpp::traits::input_parameter< double >::type alpha(alphaSEXP);
-    Rcpp::traits::input_parameter< double >::type beta(betaSEXP);
-    Rcpp::traits::input_parameter< arma::mat >::type epsilon(epsilonSEXP);
-    Rcpp::traits::input_parameter< int >::type nobs(nobsSEXP);
-    rcpp_result_gen = Rcpp::wrap(calc_Rt_C(alpha, beta, epsilon, nobs));
-    return rcpp_result_gen;
-END_RCPP
-}
 // calc_Qs
 arma::mat calc_Qs(arma::vec phi, arma::mat rt);
 RcppExport SEXP _robcdcc_calc_Qs(SEXP phiSEXP, SEXP rtSEXP) {
@@ -108,6 +102,19 @@ BEGIN_RCPP
     Rcpp::traits::input_parameter< arma::vec >::type phi(phiSEXP);
     Rcpp::traits::input_parameter< arma::mat >::type rt(rtSEXP);
     rcpp_result_gen = Rcpp::wrap(calc_Qs(phi, rt));
+    return rcpp_result_gen;
+END_RCPP
+}
+// calc_Rt_C
+arma::mat calc_Rt_C(arma::vec phi, arma::mat rt, arma::mat S);
+RcppExport SEXP _robcdcc_calc_Rt_C(SEXP phiSEXP, SEXP rtSEXP, SEXP SSEXP) {
+BEGIN_RCPP
+    Rcpp::RObject rcpp_result_gen;
+    Rcpp::RNGScope rcpp_rngScope_gen;
+    Rcpp::traits::input_parameter< arma::vec >::type phi(phiSEXP);
+    Rcpp::traits::input_parameter< arma::mat >::type rt(rtSEXP);
+    Rcpp::traits::input_parameter< arma::mat >::type S(SSEXP);
+    rcpp_result_gen = Rcpp::wrap(calc_Rt_C(phi, rt, S));
     return rcpp_result_gen;
 END_RCPP
 }
@@ -184,9 +191,9 @@ BEGIN_RCPP
     return rcpp_result_gen;
 END_RCPP
 }
-// robust_calc_Qs
-arma::mat robust_calc_Qs(arma::vec phi, arma::mat rt, double cy1, double chisq1);
-RcppExport SEXP _robcdcc_robust_calc_Qs(SEXP phiSEXP, SEXP rtSEXP, SEXP cy1SEXP, SEXP chisq1SEXP) {
+// robust_calc_Qs_C
+arma::mat robust_calc_Qs_C(arma::vec phi, arma::mat rt, double cy1, double chisq1);
+RcppExport SEXP _robcdcc_robust_calc_Qs_C(SEXP phiSEXP, SEXP rtSEXP, SEXP cy1SEXP, SEXP chisq1SEXP) {
 BEGIN_RCPP
     Rcpp::RObject rcpp_result_gen;
     Rcpp::RNGScope rcpp_rngScope_gen;
@@ -194,25 +201,22 @@ BEGIN_RCPP
     Rcpp::traits::input_parameter< arma::mat >::type rt(rtSEXP);
     Rcpp::traits::input_parameter< double >::type cy1(cy1SEXP);
     Rcpp::traits::input_parameter< double >::type chisq1(chisq1SEXP);
-    rcpp_result_gen = Rcpp::wrap(robust_calc_Qs(phi, rt, cy1, chisq1));
+    rcpp_result_gen = Rcpp::wrap(robust_calc_Qs_C(phi, rt, cy1, chisq1));
     return rcpp_result_gen;
 END_RCPP
 }
-// robust_calc_portfolio_variance
-double robust_calc_portfolio_variance(arma::vec phi, arma::vec hat_phi, arma::mat rt, arma::mat cont_rt, arma::mat S, arma::mat hat_S, double cy2, double chisq2);
-RcppExport SEXP _robcdcc_robust_calc_portfolio_variance(SEXP phiSEXP, SEXP hat_phiSEXP, SEXP rtSEXP, SEXP cont_rtSEXP, SEXP SSEXP, SEXP hat_SSEXP, SEXP cy2SEXP, SEXP chisq2SEXP) {
+// robust_calc_Rt_C
+arma::mat robust_calc_Rt_C(arma::vec phi, arma::mat rt, arma::mat S, double cy2, double chisq2);
+RcppExport SEXP _robcdcc_robust_calc_Rt_C(SEXP phiSEXP, SEXP rtSEXP, SEXP SSEXP, SEXP cy2SEXP, SEXP chisq2SEXP) {
 BEGIN_RCPP
     Rcpp::RObject rcpp_result_gen;
     Rcpp::RNGScope rcpp_rngScope_gen;
     Rcpp::traits::input_parameter< arma::vec >::type phi(phiSEXP);
-    Rcpp::traits::input_parameter< arma::vec >::type hat_phi(hat_phiSEXP);
     Rcpp::traits::input_parameter< arma::mat >::type rt(rtSEXP);
-    Rcpp::traits::input_parameter< arma::mat >::type cont_rt(cont_rtSEXP);
     Rcpp::traits::input_parameter< arma::mat >::type S(SSEXP);
-    Rcpp::traits::input_parameter< arma::mat >::type hat_S(hat_SSEXP);
     Rcpp::traits::input_parameter< double >::type cy2(cy2SEXP);
     Rcpp::traits::input_parameter< double >::type chisq2(chisq2SEXP);
-    rcpp_result_gen = Rcpp::wrap(robust_calc_portfolio_variance(phi, hat_phi, rt, cont_rt, S, hat_S, cy2, chisq2));
+    rcpp_result_gen = Rcpp::wrap(robust_calc_Rt_C(phi, rt, S, cy2, chisq2));
     return rcpp_result_gen;
 END_RCPP
 }
@@ -266,20 +270,20 @@ END_RCPP
 }
 
 static const R_CallMethodDef CallEntries[] = {
-    {"_robcdcc_geral_calc_portfolio_variance", (DL_FUNC) &_robcdcc_geral_calc_portfolio_variance, 11},
+    {"_robcdcc_geral_calc_portfolio_variance", (DL_FUNC) &_robcdcc_geral_calc_portfolio_variance, 14},
     {"_robcdcc_real_portfolio_var", (DL_FUNC) &_robcdcc_real_portfolio_var, 4},
     {"_robcdcc_qmvn_calc_portfolio_variance", (DL_FUNC) &_robcdcc_qmvn_calc_portfolio_variance, 7},
     {"_robcdcc_unconditional_correlation", (DL_FUNC) &_robcdcc_unconditional_correlation, 2},
     {"_robcdcc_compositeCDCC_C", (DL_FUNC) &_robcdcc_compositeCDCC_C, 5},
-    {"_robcdcc_calc_Rt_C", (DL_FUNC) &_robcdcc_calc_Rt_C, 4},
     {"_robcdcc_calc_Qs", (DL_FUNC) &_robcdcc_calc_Qs, 2},
+    {"_robcdcc_calc_Rt_C", (DL_FUNC) &_robcdcc_calc_Rt_C, 3},
     {"_robcdcc_loglikelihoodGARCH_C", (DL_FUNC) &_robcdcc_loglikelihoodGARCH_C, 5},
     {"_robcdcc_calc_ht_C", (DL_FUNC) &_robcdcc_calc_ht_C, 5},
     {"_robcdcc_spearman_corr", (DL_FUNC) &_robcdcc_spearman_corr, 1},
     {"_robcdcc_corr_reweighted_C", (DL_FUNC) &_robcdcc_corr_reweighted_C, 3},
     {"_robcdcc_robust_compositeCDCC_C", (DL_FUNC) &_robcdcc_robust_compositeCDCC_C, 9},
-    {"_robcdcc_robust_calc_Qs", (DL_FUNC) &_robcdcc_robust_calc_Qs, 4},
-    {"_robcdcc_robust_calc_portfolio_variance", (DL_FUNC) &_robcdcc_robust_calc_portfolio_variance, 8},
+    {"_robcdcc_robust_calc_Qs_C", (DL_FUNC) &_robcdcc_robust_calc_Qs_C, 4},
+    {"_robcdcc_robust_calc_Rt_C", (DL_FUNC) &_robcdcc_robust_calc_Rt_C, 5},
     {"_robcdcc_robust_loglikelihoodGARCH_C", (DL_FUNC) &_robcdcc_robust_loglikelihoodGARCH_C, 7},
     {"_robcdcc_robust_calc_ht_C", (DL_FUNC) &_robcdcc_robust_calc_ht_C, 7},
     {"_robcdcc_simCDCC_C", (DL_FUNC) &_robcdcc_simCDCC_C, 4},

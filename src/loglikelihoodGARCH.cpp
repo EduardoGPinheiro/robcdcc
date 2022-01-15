@@ -5,7 +5,8 @@
 using namespace Rcpp;
 
 // [[Rcpp::export]]
-double loglikelihoodGARCH_C(double alpha1, double beta1, NumericVector rt, int nobs, double h){
+double loglikelihoodGARCH_C(double alpha1, double beta1, 
+                            NumericVector rt, int nobs, double h){
   double ht = h;
   double alpha0 = h * (1-alpha1-beta1);
   double lkh = 0.0; 
@@ -22,10 +23,10 @@ double loglikelihoodGARCH_C(double alpha1, double beta1, NumericVector rt, int n
 // [[Rcpp::export]]
 NumericVector calc_ht_C(double omega, double alpha1, double beta1, 
                         NumericVector rt, int nobs){
-  NumericVector ht(nobs);
+  NumericVector ht(nobs+1);
   ht[0] = omega / (1-alpha1-beta1);
   
-  for(int t=0; t < (nobs - 1); t++){
+  for(int t=0; t < nobs; t++){
     ht[t+1] = omega + alpha1 * pow(rt[t], 2.0) + beta1 * ht[t];
   }
   

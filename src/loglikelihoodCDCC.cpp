@@ -96,7 +96,6 @@ using namespace Rcpp;
       
       Rt = diagmat(IQs) * Qt * diagmat(IQs);
       IRt = arma::inv(Rt);
-      
     }
     
     return(lkh / nobs);
@@ -118,73 +117,6 @@ using namespace Rcpp;
     return(lkh / (1.0 * ndim));
   }
   
-  // [[Rcpp::depends("RcppArmadillo")]]
-  // [[Rcpp::export]]
-  arma::mat calc_Rt_C(double alpha, double beta, arma::mat epsilon, int nobs){
-    mat tilde_epsilon = zeros(nobs, 2);
-    mat S = zeros(2, 2);
-    mat S0 = S;
-    
-    double detRt = 0;
-    double lkh = 0;
-    double ee12 = 0;
-    double ee22 = 0;
-    double intercepto = 1-alpha-beta;
-    
-    NumericVector Q11(nobs);
-    NumericVector Q22(nobs);
-    NumericVector Q12(nobs);
-    
-    NumericVector R12(nobs);
-    NumericVector IR11(nobs);
-    NumericVector IR22(nobs);
-    NumericVector IR12(nobs);
-    
-    Q11[0] = 1.0;
-    Q22[0] = 1.0;
-    Q12[0] = 0;
-    R12[0] = 0;
-    
-    IR11[0] = 1.0;
-    IR22[0] = 1.0;
-    IR12[0] = 0;
-    
-    ee12 = epsilon(0,0) * epsilon(0,0);
-    ee22 = epsilon(0,1) * epsilon(0,1);
-    tilde_epsilon.rows(0,0) = epsilon.rows(0,0);
-    
-    for(int t=1; t < nobs; t++){
-      Q11[t] = intercepto + alpha * ee12 * Q11[t-1] + beta * Q11[t-1];
-      Q22[t] = intercepto + alpha * ee22 * Q22[t-1] + beta * Q22[t-1];
-      
-      tilde_epsilon(t,0) = sqrt(Q11[t]) * epsilon(t,0);
-      tilde_epsilon(t,1) = sqrt(Q22[t]) * epsilon(t,1);
-      ee12 = epsilon(t,0) * epsilon(t,0);
-      ee22 = epsilon(t,1) * epsilon(t,1);
-    }
-    
-    S = unconditional_correlation(tilde_epsilon, nobs);
-    S0 = (1-alpha-beta) * S;
-    
-    Q12[0] = S(0,1);
-    R12[0] = S(0,1);
-    
-    for(int t=0; t < (nobs-1); t++){
-      detRt = 1.0 - R12[t] * R12[t];
-      
-      IR11[t] = 1.0 / detRt;
-      IR22[t] = 1.0 / detRt;
-      IR12[t] = -R12[t] / detRt;
-      
-      Q12[t+1] = S0(0,1) + 
-        alpha * (sqrt(Q11[t] * Q22[t]) * epsilon(t,0) * epsilon(t,1)) + 
-        beta * Q12[t];
-      
-      R12[t+1] = Q12[t+1] / sqrt(Q11[t+1] * Q22[t+1]); 
-    }
-    
-    return R12;
-  } 
   
   // [[Rcpp::depends("RcppArmadillo")]]
   // [[Rcpp::export]]
@@ -218,4 +150,41 @@ using namespace Rcpp;
     return rts;
   } 
   
+  // [[Rcpp::depends("RcppArmadillo")]]
+  // [[Rcpp::export]]
+  arma::mat calc_Rt_C(arma::vec phi, 
+                      arma::mat rt,
+                      arma::mat S){
+    int nobs = rt.n_rows;
+    int ndim = rt.n_cols;
+    
+    double a = phi[0];
+    double b = phi[1];
+    
+    double dt = 0;
+    double intercepto = 1-a-b;
+
+    arma::mat Q = S;
+    arma::mat Qs = eye(ndim, ndim);
+    arma::mat Rt = S;
+    arma::mat IQs = eye(ndim, ndim);
+    
+    arma::mat rr(ndim, ndim);
+
+    for(int t=0; t < nobs; t++){
+      rr = rt.row(t).t() * rt.row(t); 
+
+      Q = intercepto * S + 
+        a * diagmat(Qs) * rr * diagmat(Qs) + 
+        b * Q;
+      
+      for(int i=0; i < ndim; i++){
+        Qs(i,i) = sqrt(Q(i,i));
+        IQs(i,i) = 1.0 / Qs(i,i);
+      }
+    }
+    
+    Rt = diagmat(IQs) * Q * diagmat(IQs);
+    return Rt;
+  } 
   
