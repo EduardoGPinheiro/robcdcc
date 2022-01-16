@@ -8,7 +8,10 @@ Author: Eduardo
 Maintainer: <eduardogabriel2077@gmail.com>
 Description: Application with functions in Rcpp.
 License: What license is it under?
-Imports: Rcpp (>= 1.0.6)
+Imports: Rcpp (>= 1.0.6), truncnorm (>= 1.0-8)
 LinkingTo: Rcpp, RcppArmadillo
 NeedsCompilation: yes
 Packaged: 2021-07-13 01:44:21 UTC; eduado
+Suggests: 
+    testthat (>= 3.0.0)
+Config/testthat/edition: 3

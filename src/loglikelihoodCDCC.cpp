@@ -38,7 +38,6 @@ using namespace Rcpp;
     mat S0 = S;
     
     double dt = 0;
-    double detRt = 0;
     double lkh = 0;
     double r11 = 0;
     double r22 = 0;
@@ -160,8 +159,6 @@ using namespace Rcpp;
     
     double a = phi[0];
     double b = phi[1];
-    
-    double dt = 0;
     double intercepto = 1-a-b;
 
     arma::mat Q = S;

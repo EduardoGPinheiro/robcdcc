@@ -5,14 +5,6 @@ geral_calc_portfolio_variance <- function(phi, q_phi, r_phi, rt, burn_rt, cont_r
     .Call(`_robcdcc_geral_calc_portfolio_variance`, phi, q_phi, r_phi, rt, burn_rt, cont_rt, S, Dt, q_Dt, r_Dt, q_S, r_S, cy2, chisq2)
 }
 
-real_portfolio_var <- function(phi, S, rt, n) {
-    .Call(`_robcdcc_real_portfolio_var`, phi, S, rt, n)
-}
-
-qmvn_calc_portfolio_variance <- function(phi, q_phi, rt, burn_rt, cont_rt, S, q_S) {
-    .Call(`_robcdcc_qmvn_calc_portfolio_variance`, phi, q_phi, rt, burn_rt, cont_rt, S, q_S)
-}
-
 #' @importFrom Rcpp evalCpp
 NULL
 
@@ -38,14 +30,6 @@ loglikelihoodGARCH_C <- function(alpha1, beta1, rt, nobs, h) {
 
 calc_ht_C <- function(omega, alpha1, beta1, rt, nobs) {
     .Call(`_robcdcc_calc_ht_C`, omega, alpha1, beta1, rt, nobs)
-}
-
-spearman_corr <- function(St) {
-    .Call(`_robcdcc_spearman_corr`, St)
-}
-
-corr_reweighted_C <- function(St, chisq2, cy2) {
-    .Call(`_robcdcc_corr_reweighted_C`, St, chisq2, cy2)
 }
 
 robust_compositeCDCC_C <- function(alpha, beta, St, nobs, ndim, cy1, chisq1, cy2, chisq2) {

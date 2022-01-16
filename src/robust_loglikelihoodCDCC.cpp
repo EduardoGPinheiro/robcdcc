@@ -18,7 +18,6 @@ arma::vec my_rank(arma::vec v){
 }
 
 // [[Rcpp::depends("RcppArmadillo")]]
-// [[Rcpp::export]]
 arma::mat spearman_corr(arma::mat St){
   int nobs = St.n_rows;
   
@@ -59,7 +58,6 @@ arma::mat spearman_corr(arma::mat St){
 
 
 // [[Rcpp::depends("RcppArmadillo")]]
-// [[Rcpp::export]]
 arma::mat corr_reweighted_C(arma::mat St, double chisq2, double cy2){
   int nobs = St.n_rows;
   
@@ -115,7 +113,6 @@ arma::mat corr_reweighted_C(arma::mat St, double chisq2, double cy2){
   return S;
 }
 
-/* Auxiliary functions -------------------------------------------------------*/
 double rho(double u){
   double res = ((6.0) * log(1.0 + u / 2.0));
   
@@ -135,7 +132,7 @@ double rc(double x, double k){
 }
 
 
-/* Bivariate robust loglikelihood --------------------------------------------*/
+// [[Rcpp::depends("RcppArmadillo")]]
 double robust_loglikelihoodCDCC_C(double alpha, double beta, arma::mat rt, 
                                   int nobs, double cy1, double chisq1,
                                   double cy2, double chisq2){
@@ -144,7 +141,6 @@ double robust_loglikelihoodCDCC_C(double alpha, double beta, arma::mat rt,
   mat S0 = S;
   
   double dt = 0;
-  double detRt = 0;
   double lkh = 0;
   double r11 = 0;
   double r22 = 0;
@@ -261,10 +257,10 @@ arma::mat robust_calc_Qs_C(arma::vec phi, arma::mat rt,
 
 // [[Rcpp::depends("RcppArmadillo")]]
 // [[Rcpp::export]]
-arma::mat robust_calc_Rt_C(arma::vec phi,  
-                           arma::mat rt, 
-                           arma::mat S,
-                           double cy2, double chisq2){
+List robust_calc_Rt_C(arma::vec phi,  
+                      arma::mat rt, 
+                      arma::mat S,
+                      double cy2, double chisq2){
   int nobs = rt.n_rows;
   int ndim = rt.n_cols;
  
@@ -281,10 +277,13 @@ arma::mat robust_calc_Rt_C(arma::vec phi,
   arma::mat IQs = eye(ndim, ndim);
   
   arma::mat rr(ndim, ndim);
-
+  arma::vec filter(nobs);
+   
+  List results;
   for(int t=0; t < nobs; t++){
     rr = rt.row(t).t() * rt.row(t); 
     dt = (rt.row(t) * IRt * rt.row(t).t()).eval()(0,0);
+    filter(t) = rc(dt, chisq2);
     
     // Robust
     Q = intercepto * S + 
@@ -299,7 +298,9 @@ arma::mat robust_calc_Rt_C(arma::vec phi,
     Rt = diagmat(IQs) * Q * diagmat(IQs);
     IRt = arma::inv(Rt);
   }
-
-  return Rt;
+  
+  results['Rt'] = Rt;
+  results['filter'] = filter;
+  return results;
 }
   

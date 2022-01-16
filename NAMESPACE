@@ -1,3 +1,6 @@
 useDynLib(robcdcc, .registration=TRUE)
 importFrom(Rcpp, evalCpp)
+importFrom(dplyr, '%>%')
+importFrom(truncnorm, 'rtruncnorm')
+importFrom(mvnfast, 'rmvn')
 exportPattern("^[[:alpha:]]+")
