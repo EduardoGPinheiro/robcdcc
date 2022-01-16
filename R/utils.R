@@ -19,6 +19,16 @@ fc = function(delta, N){
   return(res)
 }
 
+biv_robust_control = function(delta){
+  rc = robust_control = case_when(
+    delta == .99 ~ c(1.0185, 1.0101, .99), 
+    delta == .975 ~ c(1.0465, 1.0257, .975), 
+    delta == .95 ~ c(1.0953, 1.0526, .95), 
+    delta == .90 ~ c(1.2030, 1.111, .90), 
+    TRUE ~ c(fc(delta, 1), fc(delta, 2), delta))
+  return(rc)
+}
+
 #' Calculate corretion factor
 #'
 #' @param rt return matrix
@@ -54,25 +64,21 @@ calc_std_residuals = function(rt, eta_df){
 }
 
 calc_ht = function(rt, eta) {
+  rt = rt - eta[1]
   nobs = length(rt)
+  assert('rt in calc_ht is not a vector', is.vector(rt)==TRUE)
   
-  # parameters
-  eta = as.numeric(eta)
-  omega = eta[1]
-  alpha = eta[2]
-  beta = eta[3]
-  
-  return(calc_ht_C(omega, alpha, beta, rt, nobs))
+  return(calc_ht_C(eta[2], eta[3], eta[4], rt, nobs))
 }
 
-calc_Dt = function(rt, eta){
-  eta = eta %>% apply(FUN=list, MARGIN=1) %>% map(1) %>% lapply(unlist)
-  rt = rt %>% apply(FUN=list, MARGIN=2) %>% map(1)
+calc_Dt = function(rt, eta_df){
+  eta_lst = eta_df %>% apply(FUN=list, MARGIN=1) %>% map(1) %>% lapply(unlist)
+  rt_lst = rt %>% apply(FUN=list, MARGIN=2) %>% map(1)
   
   Dt = mapply(
     calc_ht,
-    rt,
-    eta,
+    rt_lst,
+    eta_lst,
     SIMPLIFY = FALSE
   ) %>%
     rlist::list.cbind(.) 
@@ -105,15 +111,10 @@ calc_Qs = function(rt, phi) {
   return(robust_calc_Qs_C(phi=phi, rt=rt, cy1=cy1, chisq1=chisq1))
 }
 
-calc_Rt = function(rt, phi) {
-  nobs = nrow(rt)
+calc_Rt = function(rt, phi, S) {
   phi = as.numeric(phi)
-  
-  # parameters
-  a = phi[1]
-  b = phi[2]
-  
-  return(calc_Rt_C(a, b, rt, nobs))
+
+  return(calc_Rt_C(phi, rt, S))
 }
 
 # Robust GARCH
@@ -129,13 +130,7 @@ robust_estimateGARCH = function(rt, cy, chisq, k=30) {
 }
 
 robust_calc_std_residuals = function(rt, eta_df, delta=.975){
-  robust_control = case_when(
-    delta == .99 ~ c(1.0185, 1.0101, .99), 
-    delta == .975 ~ c(1.0465, 1.0257, .975), 
-    delta == .95 ~ c(1.0953, 1.0526, .95), 
-    delta == .90 ~ c(1.2030, 1.111, .90), 
-    TRUE ~ c(fc(delta, 1), fc(delta, 2), delta))
-  
+  robust_control = biv_robust_control(delta)  
   cy1 = robust_control[1]
   chisq1 = qchisq(delta, 1) # df = 1
   
@@ -154,49 +149,40 @@ robust_calc_std_residuals = function(rt, eta_df, delta=.975){
   return(list(std_rt=std_rt, Dt=Dt))
 }
 
-robust_calc_ht = function(rt, eta, rc_delta) {
+robust_calc_ht = function(rt, eta, delta) {
+  robust_control = biv_robust_control(delta)  
   nobs = length(rt)
-  
-  # parameters
-  eta = as.numeric(eta)
-  omega = eta[1]
-  alpha = eta[2]
-  beta = eta[3]
+  rt = rt - eta[1]
+  assert('rt in calc_ht is not a vector', is.vector(rt)==TRUE)
   
   # robust parameters
-  cy = rc_delta[1]
-  chisq = qchisq(rc_delta[3], 1)
+  cy = robust_control[1]
+  chisq = qchisq(delta, 1)
   
-  return(robcdcc::robust_calc_ht_C(omega, alpha, beta, rt, nobs, cy, chisq))
+  return(robcdcc::robust_calc_ht_C(eta[2], eta[3], eta[4], rt, nobs, cy, chisq))
 }
 
-
-robust_calc_Dt = function(rt, eta, rc_delta){
-  eta = eta %>% apply(FUN=list, MARGIN=1) %>% map(1) %>% lapply(unlist)
-  rt = rt %>% apply(FUN=list, MARGIN=2) %>% map(1)
+robust_calc_Dt = function(rt, eta_df, delta=.975){
+  eta_lst = eta_df %>% apply(FUN=list, MARGIN=1) %>% map(1) %>% lapply(unlist)
+  rt_lst = rt %>% apply(FUN=list, MARGIN=2) %>% map(1)
   
-  Dt = mapply(
+  Dt_results = mapply(
     robust_calc_ht,
-    rt,
-    eta,
-    MoreArgs = list(rc_delta = rc_delta),
+    rt_lst,
+    eta_lst,
+    MoreArgs = list(delta = delta),
     SIMPLIFY = FALSE
-  ) %>%
-    lapply(function(x){x[, 1]}) %>%
-    rlist::list.cbind(.) 
+  ) 
   
-  return(Dt)
+  Dt = Dt_results %>% map(1) %>% rlist::list.cbind(.)
+  w = Dt_results %>% map(2) %>% rlist::list.cbind(.)
+  
+  return(list(Dt=Dt, w=w))
 }
 
 # Robust cDCC
 robust_estimateCDCC = function(rt, delta, k=30){
-  robust_control = case_when(
-    delta == .99 ~ c(1.0185, 1.0101, .99), 
-    delta == .975 ~ c(1.0465, 1.0257, .975), 
-    delta == .95 ~ c(1.0953, 1.0526, .95), 
-    delta == .90 ~ c(1.2030, 1.111, .90), 
-    TRUE ~ c(fc(delta, 1), fc(delta, 2), delta))
-  
+  robust_control = biv_robust_control(delta)  
   cy1 = robust_control[1]
   cy2 = robust_control[2]
   delta = robust_control[3]
@@ -219,13 +205,7 @@ robust_estimateCDCC = function(rt, delta, k=30){
 }
 
 high_dimension_robust_estimateCDCC = function(rt, delta){
-  robust_control = case_when(
-    delta == .99 ~ c(1.0185, 1.0101, .99), 
-    delta == .975 ~ c(1.0465, 1.0257, .975), 
-    delta == .95 ~ c(1.0953, 1.0526, .95), 
-    delta == .90 ~ c(1.2030, 1.111, .90), 
-    TRUE ~ c(fc(delta, 1), fc(delta, 2), delta))
-
+  robust_control = biv_robust_control(delta)  
   cy1 = robust_control[1]
   cy2 = robust_control[2]
   delta = robust_control[3]
@@ -241,20 +221,14 @@ high_dimension_robust_estimateCDCC = function(rt, delta){
 }
 
 robust_calc_Qs = function(rt, phi, delta=0.975) {
-  robust_control = case_when(
-    delta == .99 ~ c(1.0185, 1.0101, .99), 
-    delta == .975 ~ c(1.0465, 1.0257, .975), 
-    delta == .95 ~ c(1.0953, 1.0526, .95), 
-    delta == .90 ~ c(1.2030, 1.111, .90),
-    TRUE ~ c(fc(delta, 1), fc(delta, 2), delta))
-
+  robust_control = biv_robust_control(delta)  
   cy1 = robust_control[1]
   chisq1 = qchisq(delta, 1) 
   
   return(robust_calc_Qs_C(phi=phi, rt=rt, cy1=cy1, chisq1=chisq1))
 }
 
-robust_calc_Rt = function(rt, phi, S=S, delta=0.975) {
+robust_calc_Rt = function(rt, phi, S, delta=0.975) {
   N = ncol(rt)
   cy2 = fc(delta, N)
   chisq2 = qchisq(delta, N)

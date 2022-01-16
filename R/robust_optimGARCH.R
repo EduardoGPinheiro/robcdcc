@@ -1,4 +1,4 @@
-medianB = function(r, k=30) {
+medianB = function(r, k = 30) {
   n = length(r)
   med = c()
   mad = c()
@@ -18,8 +18,8 @@ medianB = function(r, k=30) {
   return(list(med, mad, w))
 }
 
-robust_optimGARCH = function(rt, cy, chisq, k=30) {
-  AUX = medianB(rt, k=k)
+robust_optimGARCH = function(rt, cy, chisq, k = 30) {
+  AUX = medianB(rt, k = k)
   Med = AUX[[1]]
   MAD = AUX[[2]]
   I = (rt - Med) ^ 2 / (1.486 * MAD) ^ 2 <= 3.841459
@@ -28,8 +28,8 @@ robust_optimGARCH = function(rt, cy, chisq, k=30) {
   hat = 1.318 * sum((rt - mu_R) ^ 2 * J) / sum(J)
   
   rt = rt - mu_R
-  ra <- matrix(c(1, 0, 0, 1, -1, -1), ncol = 2, byrow = TRUE)
-  rb <- c(0.00001, 0.00001, -0.9999)
+  ra <- matrix(c(1, 0, 0, 1,-1,-1), ncol = 2, byrow = TRUE)
+  rb <- c(0.00001, 0.00001,-0.9999)
   nobs = length(rt)
   
   opt = stats::constrOptim(
@@ -48,8 +48,9 @@ robust_optimGARCH = function(rt, cy, chisq, k=30) {
   )$par
   
   par = c(mu_R, hat * (1 - opt[1] - opt[2]), opt[1], opt[2], hat)
-  ht = robcdcc::robust_calc_ht_C(par[2], par[3], par[4], rt, nobs, cy, chisq)
-  std_residuals = rt / sqrt(ht[1:nobs])
+  ht_results = robcdcc::robust_calc_ht_C(par[2], par[3], par[4], rt, 
+                                         nobs, cy, chisq)
+  std_residuals = rt / sqrt(ht_results$ht[1:nobs])
   par_df = data.frame(
     mu = par[1],
     omega = par[2],
@@ -57,5 +58,10 @@ robust_optimGARCH = function(rt, cy, chisq, k=30) {
     beta = par[4],
     h = par[5]
   )
-  return(list(par_df = par_df, std_residuals = std_residuals, ht=ht))
+  return(list(
+    par_df = par_df,
+    std_residuals = std_residuals,
+    ht = ht_results$ht,
+    w = ht_results$w
+  ))
 }

@@ -183,7 +183,7 @@ BEGIN_RCPP
 END_RCPP
 }
 // robust_calc_ht_C
-NumericVector robust_calc_ht_C(double omega, double alpha1, double beta1, NumericVector rt, int nobs, double cy, double chisq);
+List robust_calc_ht_C(double omega, double alpha1, double beta1, NumericVector rt, int nobs, double cy, double chisq);
 RcppExport SEXP _robcdcc_robust_calc_ht_C(SEXP omegaSEXP, SEXP alpha1SEXP, SEXP beta1SEXP, SEXP rtSEXP, SEXP nobsSEXP, SEXP cySEXP, SEXP chisqSEXP) {
 BEGIN_RCPP
     Rcpp::RObject rcpp_result_gen;

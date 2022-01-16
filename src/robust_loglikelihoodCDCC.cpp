@@ -277,13 +277,13 @@ List robust_calc_Rt_C(arma::vec phi,
   arma::mat IQs = eye(ndim, ndim);
   
   arma::mat rr(ndim, ndim);
-  arma::vec filter(nobs);
+  arma::vec w(nobs);
    
   List results;
   for(int t=0; t < nobs; t++){
     rr = rt.row(t).t() * rt.row(t); 
     dt = (rt.row(t) * IRt * rt.row(t).t()).eval()(0,0);
-    filter(t) = rc(dt, chisq2);
+    w(t) = rc(dt, chisq2);
     
     // Robust
     Q = intercepto * S + 
@@ -299,8 +299,7 @@ List robust_calc_Rt_C(arma::vec phi,
     IRt = arma::inv(Rt);
   }
   
-  results['Rt'] = Rt;
-  results['filter'] = filter;
-  return results;
+  return Rcpp::List::create(Rcpp::Named("Rt") = Rt,
+                            Rcpp::Named("w") = w);
 }
   

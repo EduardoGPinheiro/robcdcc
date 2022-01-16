@@ -47,7 +47,7 @@ double robust_loglikelihoodGARCH_C(double alpha1,
 }
 
 // [[Rcpp::export]]
-NumericVector robust_calc_ht_C(double omega, 
+List robust_calc_ht_C(double omega, 
                                double alpha1, 
                                double beta1, 
                                NumericVector rt, 
@@ -55,14 +55,17 @@ NumericVector robust_calc_ht_C(double omega,
                                double cy, 
                                double chisq){
   NumericVector ht(nobs+1);
-
+  NumericVector w(nobs);
+  
   ht[0] = omega / (1-alpha1-beta1);
   
   for(int t=0; t < nobs; t++){
     ht[t+1] = omega + 
       alpha1 * cy * rc_g(pow(rt[t], 2.0) / ht[t], chisq) * pow(rt[t], 2.0) +
       beta1 * ht[t];
+    w[t] = rc_g(pow(rt[t], 2.0) / ht[t], chisq);
   }
   
-  return ht;
+  return Rcpp::List::create(Rcpp::Named("ht") = ht,
+                            Rcpp::Named("w") = w);
 }
