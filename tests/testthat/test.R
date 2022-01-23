@@ -21,6 +21,9 @@ test_that("ht estimation", {
   expect_true((phi_results$Dt == Dt) %>% apply(all, MARGIN = 2) %>% all)
   expect_true((robust_phi_results$Dt == rDt) %>% apply(all, MARGIN = 2) %>% all)
   expect_equal(wmin, c(0.38883892, 0.44211281))
+  
+  expect_true((nrow(Dt) - nrow(rt)) == 1)
+  expect_true((nrow(rDt) - nrow(rt)) == 1)
 })
 
 test_that("Rt estimation", {
@@ -36,7 +39,50 @@ test_that("Rt estimation", {
   expect_equal(Rt[1,2], -0.099229167)
   expect_equal(diag(Rt), c(1, 1))
   
-  expect_equal(min(robust_Rt$w), 0.54528087)
-  expect_equal(robust_Rt$Rt[1,2], -0.082167733)
+  expect_equal(min(robust_Rt$w), 0.54527522)
+  expect_equal(robust_Rt$Rt[1,2], -0.082190407)
   expect_equal(diag(robust_Rt$Rt), c(1, 1))
+})
+
+test_that("portfolio results", {
+ results_lst = geral_calc_portfolio_variance(
+    phi = c(.1, .8),
+    q_phi = phi_results$phi,
+    r_phi = robust_phi_results$phi,
+    rt = rt,
+    burn_rt = rt[1:2, ],
+    r_rt = robust_phi_results$epsilon,
+    q_rt = phi_results$epsilon,
+    S = diag(2),
+    Dt = diag(2),
+    q_Dt = phi_results$Dt %>% tail(1) %>% as.vector %>% diag,
+    r_Dt = robust_phi_results$Dt %>% tail(1) %>% as.vector %>% diag,
+    q_S = diag(2),
+    r_S = diag(2),
+    delta = .975
+  )
+ 
+ q_Dt = phi_results$Dt %>% tail(1) %>% as.vector %>% diag %>% sqrt
+ r_Dt = robust_phi_results$Dt %>% tail(1) %>% as.vector %>% diag %>% sqrt
+ 
+ # qmvn
+ qRt = diag(1/diag(q_Dt)) %*% results_lst$q_Ht %*% diag(1/diag(q_Dt))
+ validate_qRt = calc_Rt(rt=phi_results$epsilon, phi=phi_results$phi, S=diag(2))
+ 
+ # robust
+ rRt = diag(1/diag(r_Dt)) %*% results_lst$r_Ht %*% diag(1/diag(r_Dt))
+ validate_rRt = robust_calc_Rt(rt=robust_phi_results$epsilon, 
+                               phi=robust_phi_results$phi, S=diag(2))$Rt
+ 
+ expect_equal(qRt, validate_qRt)
+ expect_equal(rRt, validate_rRt)
+})
+
+test_that("devolatilized returns", {
+  std_rt = calc_devolatilized_returns(rt=rt, eta_df=phi_results$eta)
+  robust_std_rt = calc_robust_devolatilized_returns(
+    rt=rt, eta_df=robust_phi_results$eta)
+
+  expect_equal(std_rt, phi_results$epsilon)
+  expect_equal(robust_std_rt, robust_phi_results$epsilon)
 })

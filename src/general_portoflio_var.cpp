@@ -21,15 +21,16 @@ double rc2(double x, double k){
 
 // [[Rcpp::depends("RcppArmadillo")]]
 // [[Rcpp::export]]
-arma::vec geral_calc_portfolio_variance(arma::vec phi, 
-                                        arma::vec q_phi, arma::vec r_phi,  
-                                        arma::mat rt, arma::mat burn_rt,
-                                        arma::mat cont_rt,
-                                        arma::mat S, 
-                                        arma::mat Dt, arma::mat q_Dt, 
-                                        arma::mat r_Dt,
-                                        arma::mat q_S, arma::mat r_S,
-                                        double cy2, double chisq2){
+List geral_calc_portfolio_variance_C(arma::vec phi, 
+                                    arma::vec q_phi, arma::vec r_phi,  
+                                    arma::mat rt, arma::mat burn_rt,
+                                    arma::mat q_rt,
+                                    arma::mat r_rt,
+                                    arma::mat S, 
+                                    arma::mat Dt, arma::mat q_Dt, 
+                                    arma::mat r_Dt,
+                                    arma::mat q_S, arma::mat r_S,
+                                    double cy2, double chisq2){
   int nobs = rt.n_rows;
   int ndim = rt.n_cols;
   int bnobs = burn_rt.n_rows - 1;
@@ -43,7 +44,7 @@ arma::vec geral_calc_portfolio_variance(arma::vec phi,
   double r_a = r_phi[0];
   double r_b = r_phi[1];
   
-  double dt = 0;
+  double r_dt = 0;
   double intercepto = 1-a-b;
   double q_intercepto = 1-q_a-q_b;
   double r_intercepto = 1-r_a-r_b;
@@ -80,7 +81,8 @@ arma::vec geral_calc_portfolio_variance(arma::vec phi,
   arma::mat r_IQs = eye(ndim, ndim);
   
   arma::mat rr(ndim, ndim);
-  arma::mat cont_rr(ndim, ndim);
+  arma::mat q_rr(ndim, ndim);
+  arma::mat r_rr(ndim, ndim);
   arma::mat burn_rr(ndim, ndim);
   
   double q_fro=0.0;
@@ -95,8 +97,14 @@ arma::vec geral_calc_portfolio_variance(arma::vec phi,
   
   arma::vec ones_vec(ndim); 
   arma::vec results(7);
+  arma::vec wyc(nobs);
   
   ones_vec += 1.0;
+  
+  arma::mat sqrt_Dt(ndim, ndim);
+  arma::mat sqrt_qDt(ndim, ndim);
+  arma::mat sqrt_rDt(ndim, ndim);
+  
   // burn in 
   for(int t=0; t < bnobs; t++){
     burn_rr = burn_rt.row(t).t() * burn_rt.row(t); 
@@ -116,9 +124,12 @@ arma::vec geral_calc_portfolio_variance(arma::vec phi,
   
   for(int t=0; t < nobs; t++){
     rr = rt.row(t).t() * rt.row(t); 
-    cont_rr= cont_rt.row(t).t() * cont_rt.row(t);
-    dt = (cont_rt.row(t) * r_IRt * cont_rt.row(t).t()).eval()(0,0);
+    q_rr= q_rt.row(t).t() * q_rt.row(t);
+    r_rr= r_rt.row(t).t() * r_rt.row(t);
     
+    r_dt = (r_rt.row(t) * r_IRt * r_rt.row(t).t()).eval()(0,0);
+    wyc[t] = rc2(r_dt, chisq2);
+      
     // Known Ht
     Q = intercepto * S + 
       a * diagmat(Qs) * rr * diagmat(Qs) + 
@@ -133,7 +144,7 @@ arma::vec geral_calc_portfolio_variance(arma::vec phi,
     
     // QMVn 
     q_Q = q_intercepto * q_S + 
-      q_a * diagmat(q_Qs) * cont_rr * diagmat(q_Qs) + 
+      q_a * diagmat(q_Qs) * q_rr * diagmat(q_Qs) + 
       q_b * q_Q;
     
     for(int i=0; i < ndim; i++){
@@ -145,7 +156,7 @@ arma::vec geral_calc_portfolio_variance(arma::vec phi,
     
     // Robust
     r_Q = r_intercepto * r_S + 
-      r_a * cy2 * rc2(dt, chisq2) * diagmat(r_Qs) * cont_rr * diagmat(r_Qs) + 
+      r_a * cy2 * rc2(r_dt, chisq2) * diagmat(r_Qs) * r_rr * diagmat(r_Qs) + 
       r_b * r_Q;
     
     for(int i=0; i < ndim; i++){
@@ -157,10 +168,16 @@ arma::vec geral_calc_portfolio_variance(arma::vec phi,
     r_IRt = arma::inv(r_Rt);
   }
   
+  for(int i=0; i < ndim; i++){
+    sqrt_Dt(i,i) = sqrt(Dt(i,i));
+    sqrt_qDt(i,i) = sqrt(q_Dt(i,i));
+    sqrt_rDt(i,i) = sqrt(r_Dt(i,i));
+  }
+  
   // calculating excess portfolio variance
-  q_Ht = q_Dt * q_Rt * q_Dt;
-  r_Ht = r_Dt * r_Rt * r_Dt;
-  Ht = Dt * Rt * Dt;
+  q_Ht = sqrt_qDt * q_Rt * sqrt_qDt;
+  r_Ht = sqrt_rDt * r_Rt * sqrt_rDt;
+  Ht = sqrt_Dt * Rt * sqrt_Dt;
   
   q_IHt = arma::inv(q_Ht); 
   r_IHt = arma::inv(r_Ht);
@@ -197,5 +214,9 @@ arma::vec geral_calc_portfolio_variance(arma::vec phi,
   results(5) = q_gmv;
   results(6) = r_gmv; 
   
-  return results;
+  return Rcpp::List::create(Rcpp::Named("portfolio_metrics") = results,
+                            Rcpp::Named("w") = wyc,
+                            Rcpp::Named("Ht") = Ht,
+                            Rcpp::Named("q_Ht") = q_Ht,
+                            Rcpp::Named("r_Ht") = r_Ht);
 } 

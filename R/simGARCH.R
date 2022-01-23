@@ -1,4 +1,3 @@
-
 # Simulation of GARCH(1,1)
 simGARCH = function(omega, alpha1, beta1, nobs, seed){
   rt = vector(length = nobs)

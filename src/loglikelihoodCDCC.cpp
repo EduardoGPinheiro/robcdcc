@@ -119,7 +119,7 @@ using namespace Rcpp;
   
   // [[Rcpp::depends("RcppArmadillo")]]
   // [[Rcpp::export]]
-  arma::mat calc_Qs(arma::vec phi, arma::mat rt){
+  arma::mat calc_Qs_C(arma::vec phi, arma::mat rt){
     int nobs = rt.n_rows;
     int ndim = rt.n_cols;
     

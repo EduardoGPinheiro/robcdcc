@@ -58,6 +58,7 @@ arma::mat spearman_corr(arma::mat St){
 
 
 // [[Rcpp::depends("RcppArmadillo")]]
+// [[Rcpp::export]]
 arma::mat corr_reweighted_C(arma::mat St, double chisq2, double cy2){
   int nobs = St.n_rows;
   

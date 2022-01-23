@@ -1,4 +1,3 @@
-
 robust_optimCDCC = function(rt, cy1, chisq1, cy2, chisq2){
   resta <- rbind(c(-1, -1), diag(2))
   restb <- c(-0.9999, 0.00001, 0.00001)
