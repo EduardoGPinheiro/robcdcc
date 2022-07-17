@@ -220,3 +220,77 @@ List geral_calc_portfolio_variance_C(arma::vec phi,
                             Rcpp::Named("q_Ht") = q_Ht,
                             Rcpp::Named("r_Ht") = r_Ht);
 } 
+
+// [[Rcpp::depends("RcppArmadillo")]]
+// [[Rcpp::export]]
+double calc_real_portfolio_variance_C(arma::vec phi, 
+                                      arma::mat burn_rt,
+                                      arma::mat rt, 
+                                      arma::mat S, 
+                                      arma::mat Dt){
+  int nobs = rt.n_rows;
+  int ndim = rt.n_cols;
+  int bnobs = burn_rt.n_rows - 1;
+  
+  double a = phi[0];
+  double b = phi[1];
+  
+  double intercepto = 1-a-b;
+  double port_var=0;
+  
+  arma::mat Q = S;
+  arma::mat Qs = eye(ndim, ndim);
+  arma::mat Rt = S;
+  arma::mat Ht = S;
+  arma::mat IHt = S;
+  arma::mat IQs = eye(ndim, ndim);
+
+  arma::mat burn_rr(ndim, ndim);
+  arma::mat rr(ndim, ndim);
+
+  arma::mat sqrt_Dt(ndim, ndim);
+
+  // burn in 
+  for(int t=0; t < bnobs; t++){
+    burn_rr = burn_rt.row(t).t() * burn_rt.row(t); 
+    
+    // Known Ht
+    Q = intercepto * S + 
+      a * diagmat(Qs) * burn_rr * diagmat(Qs) + 
+      b * Q;
+    
+    for(int i=0; i < ndim; i++){
+      Qs(i,i) = sqrt(Q(i,i));
+      IQs(i,i) = 1.0 / Qs(i,i);
+    }
+    
+    Rt = diagmat(IQs) * Q * diagmat(IQs);
+  }
+  
+  for(int t=0; t < nobs; t++){
+    rr = rt.row(t).t() * rt.row(t); 
+
+    // Known Ht
+    Q = intercepto * S + 
+      a * diagmat(Qs) * rr * diagmat(Qs) + 
+      b * Q;
+    
+    for(int i=0; i < ndim; i++){
+      Qs(i,i) = sqrt(Q(i,i));
+      IQs(i,i) = 1.0 / Qs(i,i);
+    }
+    
+    Rt = diagmat(IQs) * Q * diagmat(IQs);
+  }
+  
+  for(int i=0; i < ndim; i++){
+    sqrt_Dt(i,i) = sqrt(Dt(i,i));
+  }
+  
+  // calculating excess portfolio variance
+  Ht = sqrt_Dt * Rt * sqrt_Dt;
+  IHt = arma::inv(Ht); 
+  port_var = 1 / (trace(IHt) / ndim);
+
+  return port_var;
+} 

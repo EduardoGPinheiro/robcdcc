@@ -18,7 +18,7 @@ medianB = function(r, k = 30) {
   return(list(med, mad, w))
 }
 
-robust_optimGARCH = function(rt, cy, chisq, k = 30) {
+robust_optimGARCH = function(rt, cy, chisq, k = 30, ini_par=c(.05, .93)) {
   AUX = medianB(rt, k = k)
   Med = AUX[[1]]
   MAD = AUX[[2]]
@@ -33,12 +33,12 @@ robust_optimGARCH = function(rt, cy, chisq, k = 30) {
   nobs = length(rt)
   
   opt = stats::constrOptim(
-    theta = c(.05, .93),
+    theta = ini_par,
     f = robust_loglikelihoodGARCH,
-    grad = robust_gradientGARCH,
+    grad = NULL,
     ui = ra,
     ci = rb,
-    mu = 1e-5,
+    # mu = 1e-5,
     outer.iterations = 400,
     outer.eps = 1e-07,
     rt = rt,

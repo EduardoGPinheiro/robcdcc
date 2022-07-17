@@ -1,12 +1,3 @@
-#' Calculate correction factor
-#'
-#' @param delta Quantile for Chi-Squared 
-#' @param N Dimension
-#'
-#' @return Correction factor for the weighted variance estimator
-#' @importFrom dplyr %>%
-#' @importFrom stats rchisq, qchisq
-
 fc = function(delta, N){
   set.seed(1)
   chisq = rchisq((10^5), N)
@@ -44,11 +35,13 @@ corr_reweighted = function(rt, delta=.975){
   corr_reweighted_C(St=rt, cy2=cy2, chisq2=chisq2)
 }
 
-#' Calculate corretion factor
+#' Estimate GARCH(1, 1) parameters
 #'
 #' @param rt return matrix
 #'
-#' @return Fit results
+#' @return A list containing the estimated parameters, standardized residuals 
+#' and conditional variance for each series
+#' 
 #' @importFrom dplyr %>%
 #' @importFrom purrr map
 
@@ -63,7 +56,7 @@ estimateGARCH = function(rt){
   return(list(par_df=par_df, std_residuals=std_residuals, Dt=Dt))
 }
 
-#' Calculate ht using GARCH
+#' Calculate ht for GARCH(1,1)
 #'
 #' @param rt returns
 #' @param eta GARCH parameters
@@ -81,6 +74,14 @@ calc_ht = function(rt, eta) {
   }
 }
 
+#' Calculate Dt for GARCH(1,1), a diagonal matrix containing estimated 
+#' volatilities for each series in each time.
+#'
+#' @param rt returns
+#' @param eta GARCH parameters
+#'
+#' @return DataFrame of volatilities (Dt)
+
 calc_Dt = function(rt, eta_df){
   eta_df = eta_df %>% select(mu, omega, alpha, beta)
   eta_lst = eta_df %>% apply(FUN=list, MARGIN=1) %>% map(1) %>% lapply(unlist)
@@ -97,6 +98,13 @@ calc_Dt = function(rt, eta_df){
   return(Dt)
 }
 
+#' Calculate devolatilized returns for GARCH(1,1).
+#'
+#' @param rt returns
+#' @param eta GARCH parameters
+#'
+#' @return devolatilized returns
+
 calc_devolatilized_returns = function(rt, eta_df){
   nobs = nrow(rt)
   Dt = calc_Dt(rt=rt, eta_df=eta_df)
@@ -109,8 +117,14 @@ calc_devolatilized_returns = function(rt, eta_df){
   return(rt)
 }
 
-# cDCC
-estimateCDCC = function(rt){
+#' Estimate cDCC(1, 1) parameters
+#'
+#' @param rt return matrix
+#'
+#' @return A list containing the estimated parameters, standardized residuals 
+#' and conditional variance for each series
+
+estimateCDCC = function(rt, ini_par=c(.05, .93)){
   # GARCH estimation
   estimated_GARCH_result = estimateGARCH(rt)
   
@@ -119,10 +133,16 @@ estimateCDCC = function(rt){
   Dt = estimated_GARCH_result$Dt
   
   # cDCC estimation
-  phi = optimCDCC(epsilon)
+  phi = optimCDCC(epsilon, ini_par=ini_par)
   
   return(list(eta=eta, phi=phi, epsilon=epsilon, Dt=Dt))
 }
+
+#' Estimate cDCC(1, 1) parameters
+#'
+#' @param rt returns matrix
+#' 
+#' @return The estimated parameters for cDCC(1,1)
 
 high_dimension_estimateCDCC = function(rt){
   phi = optimCDCC(rt)
@@ -139,7 +159,7 @@ calc_Rt = function(rt, phi, S) {
   return(calc_Rt_C(phi, rt, S))
 }
 
-#' Estimate GARCH(1,1) parameters using BIP-GARCH especification and 
+#' Estimate GARCH(1,1) parameters using BIP-GARCH specification and 
 #' M-estimation
 #'
 #' @param rt returns
@@ -159,7 +179,7 @@ robust_estimateGARCH = function(rt, cy, chisq, k=30) {
   return(list(par_df = par_df, std_residuals = std_residuals, Dt=Dt))
 }
 
-#' Calculate devolatilized returns using BIP-GARCH especification
+#' Calculate devolatilized returns using BIP-GARCH specification
 #'
 #' @param rt returns
 #' @param eta_df GARCH parameters
@@ -207,6 +227,16 @@ robust_calc_ht = function(rt, eta, delta) {
   }
 }
 
+#' Calculate Dt for BIP-GARCH(1,1), a diagonal matrix containing estimated 
+#' volatilities for each series in each time.
+#'
+#' @param rt returns
+#' @param eta_df BIP-GARCH parameters dataframe
+#' @param delta BIP-GARCH parameters
+#'
+#' @return DataFrame of volatilities (Dt) and volatility filter values for 
+#' each time 
+
 robust_calc_Dt = function(rt, eta_df, delta=.975){
   eta_df = eta_df %>% select(mu, omega, alpha, beta)
   eta_lst = eta_df %>% apply(FUN=list, MARGIN=1) %>% map(1) %>% lapply(unlist)
@@ -226,8 +256,19 @@ robust_calc_Dt = function(rt, eta_df, delta=.975){
   return(list(Dt=Dt, w=w))
 }
 
-# Robust cDCC
-robust_estimateCDCC = function(rt, delta, k=30){
+#' Estimate BIP-cDCC(1, 1) parameters
+#'
+#' @param rt returns matrix
+#' @param delta chi-squared quantile for the definition of the weighting scheme 
+#' @param k size of the local window for the reweighted mean vector and 
+#' covariance matrix estimators
+#' @param ini_par initial values for the parameters to be optimized over.
+#' 
+#' @return A list containing the estimated parameters for 
+#' BIP_GARCH(1,1)-BIP-cDCC(1,1), standardized residuals and conditional 
+#' variance for each series
+
+robust_estimateCDCC = function(rt, delta, k=30, ini_par=c(0.05, .93)){
   robust_control = biv_robust_control(delta)  
   cy1 = robust_control[1]
   cy2 = robust_control[2]
@@ -245,10 +286,18 @@ robust_estimateCDCC = function(rt, delta, k=30){
   Dt = robust_estimated_GARCH_result$Dt
   
   # cDCC robust estimation
-  phi = robust_optimCDCC(epsilon, cy1, chisq1, cy2, chisq2)
+  phi = robust_optimCDCC(rt=epsilon, cy1=cy1, chisq1=chisq1, 
+                         cy2=cy2, chisq2=chisq2, ini_par = ini_par)
   
   return(list(eta=eta, phi=phi, epsilon=epsilon, Dt=Dt))
 }
+
+#' Estimate BIP-cDCC(1, 1) parameters
+#'
+#' @param rt returns matrix
+#' @param delta chi-squared quantile for the definition of the weighting scheme 
+#' 
+#' @return The estimated parameters for BIP_GARCH(1,1)-BIP-cDCC(1,1)
 
 high_dimension_robust_estimateCDCC = function(rt, delta){
   robust_control = biv_robust_control(delta)  
@@ -288,6 +337,31 @@ robust_calc_Rt = function(rt, phi, S, delta=0.975) {
   return(robust_calc_Rt_C(phi=phi, rt=rt, S=S, cy2=cy2, chisq2=chisq2))
 }
 
+#' Evaluate cDCC(1, 1) and BIP-cDCC(1, 1) estimators on the estimation of the
+#' weights for the minimum variance portfolio (MVP). The estimated weights are 
+#' compared with the real ones using three performances criteria: 
+#' Frobenius distance, Ratio of variance of the selected MVP and Percentage 
+#' increase of the variance of the selected MVP in relation to the variance of 
+#' the true MVP.
+#' @param q_phi estimated parameter for the cDCC(1,1)
+#' @param r_phi estimated parameter for the BIP-cDCC(1,1)
+#' @param rt returns matrix
+#' @param burn_rt burn-in returns (for simulation examples)
+#' @param q_rt standardized returns by estimated GARCH(1,1) parameters
+#' @param r_rt standardized returns by estimated BIP-GARCH(1,1) parameters
+#' @param S unconditional covariance matrix
+#' @param Dt matrix of conditional variance for each series 
+#' @param q_Dt matrix of estimated conditional variance for each series by 
+#' GARCH(1,1) Quasi-Maximum Likelihood estimator
+#' @param r_Dt matrix of estimated conditional variance for each series by 
+#' BIP-GARCH(1,1) robust estimator
+#' @param q_S estimated unconditional covariance matrix for the 
+#' Quasi-Maximum Likelihood estimator
+#' @param r_S estimated unconditional covariance matrix for the 
+#' robust estimator 
+#' @param delta chi-squared quantile for the definition of the weighting scheme
+#' 
+#' @return MVP performance measures.
 
 geral_calc_portfolio_variance = function(phi,
                                          q_phi,
@@ -303,7 +377,7 @@ geral_calc_portfolio_variance = function(phi,
                                          q_S,
                                          r_S,
                                          delta) {
-  # Get dimentions and correction factors
+  # Get dimensions and correction factors
   N = ncol(rt)
   
   if(N==2){
@@ -315,7 +389,7 @@ geral_calc_portfolio_variance = function(phi,
   
   chisq2 = qchisq(delta, N)
   
-  # Portolio results
+  # Portfolio results
   results_lst = geral_calc_portfolio_variance_C(
     phi = phi,
     q_phi = q_phi,

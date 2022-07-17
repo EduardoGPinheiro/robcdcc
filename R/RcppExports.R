@@ -5,6 +5,10 @@ geral_calc_portfolio_variance_C <- function(phi, q_phi, r_phi, rt, burn_rt, q_rt
     .Call(`_robcdcc_geral_calc_portfolio_variance_C`, phi, q_phi, r_phi, rt, burn_rt, q_rt, r_rt, S, Dt, q_Dt, r_Dt, q_S, r_S, cy2, chisq2)
 }
 
+calc_real_portfolio_variance_C <- function(phi, burn_rt, rt, S, Dt) {
+    .Call(`_robcdcc_calc_real_portfolio_variance_C`, phi, burn_rt, rt, S, Dt)
+}
+
 #' @importFrom Rcpp evalCpp
 NULL
 

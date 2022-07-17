@@ -3,6 +3,8 @@
 /home/epinheiro/Documents/robcdcc/DESCRIPTION="794A2D12"
 /home/epinheiro/Documents/robcdcc/NAMESPACE="8C8206F4"
 /home/epinheiro/Documents/robcdcc/R/RcppExports.R="F47FAA38"
+/home/epinheiro/Documents/robcdcc/R/gradientCDCC.R="57B00F6C"
+/home/epinheiro/Documents/robcdcc/R/loglikelihoodCDCC.R="DD0AD923"
 /home/epinheiro/Documents/robcdcc/R/loglikelihoodGARCH.R="9048A17E"
 /home/epinheiro/Documents/robcdcc/R/optimCDCC.R="17F22891"
 /home/epinheiro/Documents/robcdcc/R/optimGARCH.R="3B3F7FE1"

@@ -36,6 +36,21 @@ BEGIN_RCPP
     return rcpp_result_gen;
 END_RCPP
 }
+// calc_real_portfolio_variance_C
+double calc_real_portfolio_variance_C(arma::vec phi, arma::mat burn_rt, arma::mat rt, arma::mat S, arma::mat Dt);
+RcppExport SEXP _robcdcc_calc_real_portfolio_variance_C(SEXP phiSEXP, SEXP burn_rtSEXP, SEXP rtSEXP, SEXP SSEXP, SEXP DtSEXP) {
+BEGIN_RCPP
+    Rcpp::RObject rcpp_result_gen;
+    Rcpp::RNGScope rcpp_rngScope_gen;
+    Rcpp::traits::input_parameter< arma::vec >::type phi(phiSEXP);
+    Rcpp::traits::input_parameter< arma::mat >::type burn_rt(burn_rtSEXP);
+    Rcpp::traits::input_parameter< arma::mat >::type rt(rtSEXP);
+    Rcpp::traits::input_parameter< arma::mat >::type S(SSEXP);
+    Rcpp::traits::input_parameter< arma::mat >::type Dt(DtSEXP);
+    rcpp_result_gen = Rcpp::wrap(calc_real_portfolio_variance_C(phi, burn_rt, rt, S, Dt));
+    return rcpp_result_gen;
+END_RCPP
+}
 // unconditional_correlation
 arma::mat unconditional_correlation(arma::mat tilde_epsilon, int nobs);
 RcppExport SEXP _robcdcc_unconditional_correlation(SEXP tilde_epsilonSEXP, SEXP nobsSEXP) {
@@ -230,6 +245,7 @@ END_RCPP
 
 static const R_CallMethodDef CallEntries[] = {
     {"_robcdcc_geral_calc_portfolio_variance_C", (DL_FUNC) &_robcdcc_geral_calc_portfolio_variance_C, 15},
+    {"_robcdcc_calc_real_portfolio_variance_C", (DL_FUNC) &_robcdcc_calc_real_portfolio_variance_C, 5},
     {"_robcdcc_unconditional_correlation", (DL_FUNC) &_robcdcc_unconditional_correlation, 2},
     {"_robcdcc_compositeCDCC_C", (DL_FUNC) &_robcdcc_compositeCDCC_C, 5},
     {"_robcdcc_calc_Qs_C", (DL_FUNC) &_robcdcc_calc_Qs_C, 2},

@@ -15,7 +15,7 @@ simCDCC(phi, eta, S, nobs, ndim, seed)
 
 \item{nobs}{Number of observations}
 
-\item{ndim}{Number of dimentions}
+\item{ndim}{Number of dimensions}
 
 \item{seed}{seed for random sampling}
 }

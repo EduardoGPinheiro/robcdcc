@@ -1,4 +1,4 @@
-optimGARCH = function(rt){
+optimGARCH = function(rt, ini_par=c(.05,.93)){
   mu_R = mean(rt)
   hat = var(rt)
   rt = rt - mu_R
@@ -7,12 +7,12 @@ optimGARCH = function(rt){
   ra <- matrix(c(1,0,0,1,-1,-1),ncol=2,byrow=TRUE)
   rb <- c(0.00001, 0.00001,-0.9999)
   
-  opt = stats::constrOptim(theta=c(.05,.93), 
+  opt = stats::constrOptim(theta=ini_par, 
                            f=loglikelihoodGARCH, 
                            grad=NULL, 
                            ui=ra, 
                            ci=rb, 
-                           mu=1e-5, 
+                           # mu=1e-5, 
                            outer.iterations=400, 
                            outer.eps=1e-07, 
                            rt=rt, 
