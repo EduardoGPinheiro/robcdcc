@@ -78,7 +78,7 @@ S = diag(2) * .4
 eta = matrix(c(.1, .1, .8, .1, .2, .7), byrow = TRUE, ncol = 3)
 phi = c(.1, .8)
 
-sim_lst = simCDCC(phi=phi, eta=eta, S=S, nobs=1000, ndim=2, seed=1)
+sim_lst = simCDCC(phi=phi, eta=eta, S=S, nobs=2500, ndim=2, seed=10)
 rt = sim_lst$rt # returns matrix
 ht = sim_lst$ht # conditional variance matrix 
 Rt = sim_lst$Rt # conditional correlations matrices
