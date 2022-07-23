@@ -49,28 +49,30 @@ $$
 where
 
 $$
-h_{t, 1} = 0,10 + 0,10 r_{t-1, 1}^2 + 0,80 h_{t-1, 1},  
+h_{t, 1} = 0.1 + 0.1 r_{t-1, 1}^2 + 0.8 h_{t-1, 1},  
 $$ 
 
 $$
-h_{t, 2} = 0,10 + 0,20 r_{t-1, 2}^2 + 0,70 h_{t-1, 2}, 
+h_{t, 2} = 0.1 + 0.2 r_{t-1, 2}^2 + 0.7 h_{t-1, 2}, 
 $$
 
 $$ 
-\mathbf{Q}_t = (1 - 0.1 - 0.8) \mathbf{S} + 0.1 \mathbf{Q}_{t-1}^{1/2
-*} \mathbf{r}_{t-1} \mathbf{r}_{t-1}^\top \mathbf{Q}_{t-1}^{1/2
-*} + 0.8 \mathbf{Q}_t,
+\mathbf{Q_{\mathrm{t}} = \mathrm{(1 - 0.1 - 0.8)} S +
+\mathrm{0.1} Q_{\mathrm{t-1}}^{\mathrm{*1/2}} r_{\mathrm{t-1}} r_{\mathrm{t-1}}^\top Q_{\mathrm{t-1}}^{\mathrm{*1/2}} + 
+\mathrm{0.8} Q_{\mathrm{t-1}}{\mathrm{,}}} 
 $$ 
 
 $$
-\mathbf{R}_t = \mathbf{Q}_{t-1}^{-1/2*}\mathbf{Q}_t\mathbf{Q}_{t-1}^{-1/2}, 
+\mathbf{R_{\mathrm{t}} = Q_{\mathrm{t-1}}^{-\mathrm{*1/2}}Q_{\mathrm{t}} Q_{\mathrm{t-1}}^{-\mathrm{*1/2}}}, 
 $$
 
 $$
-\mathbf{H}_t = \mathbf{D}_t^{1/2} \mathbf{R}_t \mathbf{D}_t^{1/2}
+\mathbf{H_{\mathrm{t}} = D_{\mathrm{t}}^{\mathrm{1/2}} R_{\mathrm{t}} D_{\mathrm{t}}^{\mathrm{1/2}}}
 $$
 
-for $\mathbf{D}_t = diag(h_{t, 1}, h_{t, 2})$ and $\mathbf{S}_{1,2} = 0,4$.
+for $\mathbf{D_t}$ = $diag(h_{t, 1}, h_{t, 2})$ and $\mathbf{S}_{1,2} = 0,4$. 
+
+The returns can be simulated using the `simCDCC` function. The parameters for the GARCH(1,1)-cDCC(1,1) can be estimated by using the traditional quasi-maximum likelihood estimator or the robust M-estimator with the BIP-GARCH-BIP-cDCC model, with the `estimateCDCC` and `robust_estimateCDCC` functions. 
 
 ```
 # Simulation
