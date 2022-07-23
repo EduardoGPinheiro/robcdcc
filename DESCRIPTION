@@ -9,7 +9,7 @@ Maintainer: <eduardogabriel2077@gmail.com>
 Description: Application with functions in Rcpp.
 License: What license is it under?
 Imports: Rcpp (>= 1.0.6), truncnorm (>= 1.0-8), dplyr (>= 1.0.7), purrr
-        (>= 0.3.4), stats (>= 4.1.2), rlist (>= 0.4.6.2)
+        (>= 0.3.4), stats (>= 4.1.2), rlist (>= 0.4.6.2), mvnfast (>= 0.2.7)
 LinkingTo: Rcpp, RcppArmadillo
 NeedsCompilation: yes
 Packaged: 2022-04-06 01:10:21 UTC; epinheiro
