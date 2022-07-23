@@ -1,9 +1,3 @@
----
-editor_options: 
-  markdown: 
-    wrap: 72
----
-
 ## `robcdcc` a package for robust cDCC estimation
 
 The `robcdcc` is a `R` package for conditional variance and covariance
@@ -54,13 +48,25 @@ $$
 
 where
 
+$$
+h_{t, 1} = 0,10 + 0,10 r_{t-1, 1}^2 + 0,80 h_{t-1, 1},  
 $$ 
-h_{t, 1} = 0,10 + 0,10 r_{t-1, 1}^2 + 0,80 h_{t-1, 1}, \\ 
-h_{t, 2} = 0,10 + 0,20 r_{t-1, 2}^2 + 0,70 h_{t-1, 2}, \\
+
+$$
+h_{t, 2} = 0,10 + 0,20 r_{t-1, 2}^2 + 0,70 h_{t-1, 2}, 
+$$
+
+$$ 
 \mathbf{Q}_t = (1 - 0.1 - 0.8) \mathbf{S} + 0.1 \mathbf{Q}_{t-1}^{1/2
 *} \mathbf{r}_{t-1} \mathbf{r}_{t-1}^\top \mathbf{Q}_{t-1}^{1/2
-*} + 0.8 \mathbf{Q}_t,\\
-\mathbf{R}_t = \mathbf{Q}_{t-1}^{-1/2*}\mathbf{Q}_t\mathbf{Q}_{t-1}^{-1/2}, \\
+*} + 0.8 \mathbf{Q}_t,
+$$ 
+
+$$
+\mathbf{R}_t = \mathbf{Q}_{t-1}^{-1/2*}\mathbf{Q}_t\mathbf{Q}_{t-1}^{-1/2}, 
+$$
+
+$$
 \mathbf{H}_t = \mathbf{D}_t^{1/2} \mathbf{R}_t \mathbf{D}_t^{1/2}
 $$
 
