@@ -117,7 +117,7 @@ calc_devolatilized_returns = function(rt, eta_df){
   return(rt)
 }
 
-#' Estimate cDCC(1, 1) parameters
+#' Estimate GARCH(1,1)-cDCC(1, 1) parameters
 #'
 #' @param rt return matrix
 #'
@@ -268,7 +268,7 @@ robust_calc_Dt = function(rt, eta_df, delta=.975){
 #' BIP_GARCH(1,1)-BIP-cDCC(1,1), standardized residuals and conditional 
 #' variance for each series
 
-robust_estimateCDCC = function(rt, delta, k=30, ini_par=c(0.05, .93)){
+robust_estimateCDCC = function(rt, delta=.975, k=30, ini_par=c(0.05, .93)){
   robust_control = biv_robust_control(delta)  
   cy1 = robust_control[1]
   cy2 = robust_control[2]
