@@ -86,4 +86,11 @@ Rt = sim_lst$Rt # conditional correlations matrices
 # Estimation
 q_results = estimateCDCC(rt=rt) # traditional estimation procedure
 r_results = robust_estimateCDCC(rt=rt) # robust estamation procedure
+
+# Get estimates
+q_eta = q_results$eta # traditional GARCH parameters estimates
+r_eta = r_results$eta # robust GARCH parameters estimates
+
+q_phi = q_results$phi # traditional cDCC parameters estimates
+r_phi = r_results$phi # robust cDCC parameters estimates
 ```
