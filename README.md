@@ -9,7 +9,7 @@ The development version of `robcdcc` can be installed from
 [GitHub](https://github.com/) using:
 
     library(devtools)
-    install_github("EduardoGPinheiro/robcdcc")
+    install_github("EduardoGPinheiro/robcdcc", dependencies = TRUE)
 
 # Functions
 
