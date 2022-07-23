@@ -1,9 +1,7 @@
-## `robcdcc` a package for robust cDCC estimation
+## `robcdcc` a package for robust estimation of dynamic conditional GARCH models
 
-The `robcdcc` is a `R` package for conditional variance and covariance
-estimation, using the robust corrected dynamic conditional correlation
-(cDCC) model proposed by [Boudt, Daníelsson and Laurent (2013)](https://doi.org/10.1016/j.ijforecast.2012.06.003) , named BIP-cDCC. The
-estimation procedures for the traditional cDCC model are also available.
+The `robcdcc` is a `R` package for robust conditional variance and covariance estimation in high-dimension. Implementing the robust extensions for the generalized autoregressive conditionally heteroskedastic (GARCH) model and the corrected dynamic conditional correlation
+(cDCC) model, named BIP-GARCH and BIP-cDCC, proposed by [Boudt, Daníelsson and Laurent (2013)](https://doi.org/10.1016/j.ijforecast.2012.06.003); and the composite likelihood method proposed by [Pakel et al. (2021)](https://doi.org/10.1080/07350015.2020.1713795) to ensure time-efficiency when dealing with high-dimensional time series. 
 
 # Instalation
 
@@ -89,4 +87,3 @@ Rt = sim_lst$Rt # conditional correlations matrices
 q_results = estimateCDCC(rt=rt) # traditional estimation procedure
 r_results = robust_estimateCDCC(rt=rt) # robust estamation procedure
 ```
-
