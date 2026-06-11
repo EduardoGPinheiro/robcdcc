@@ -59,7 +59,7 @@ arma::mat spearman_corr(arma::mat St){
 
 // [[Rcpp::depends("RcppArmadillo")]]
 // [[Rcpp::export]]
-arma::mat corr_reweighted_C(arma::mat St, double chisq2, double cy2){
+arma::mat corr_reweighted_C(arma::mat St, double chisq2, double cy2, int k){
   int nobs = St.n_rows;
   
   mat windows = zeros(nobs, 2);
@@ -74,14 +74,14 @@ arma::mat corr_reweighted_C(arma::mat St, double chisq2, double cy2){
   double den = 0;
   
   for(int t=0; t < nobs; t++){
-    if(t <= 30 / 2){
+    if(t <= k / 2){
       windows(t, 0) = 0;
-      windows(t, 1) = 30;
-    }else{if(t > 30/2 && t < (nobs - 30 / 2)){
-      windows(t,0) = t - (30 / 2);
-      windows(t,1) = t + (30 / 2);
+      windows(t, 1) = k;
+    }else{if(t > k/2 && t < (nobs - k / 2)){
+      windows(t,0) = t - (k / 2);
+      windows(t,1) = t + (k / 2);
     }else{
-      windows(t,0) = nobs - 30 - 1;
+      windows(t,0) = nobs - k - 1;
       windows(t,1) = nobs-1;
     }
     }
@@ -134,9 +134,17 @@ double rc(double x, double k){
 
 
 // [[Rcpp::depends("RcppArmadillo")]]
-double robust_loglikelihoodCDCC_C(double alpha, double beta, arma::mat rt, 
-                                  int nobs, double cy1, double chisq1,
-                                  double cy2, double chisq2){
+double robust_loglikelihoodCDCC_C(
+    double alpha, 
+    double beta, 
+    arma::mat rt, 
+    int nobs, 
+    double cy1,
+    double chisq1,
+    double cy2, 
+    double chisq2,
+    int k
+){
   mat rts = zeros(nobs, 2);
   mat S = zeros(2, 2);
   mat S0 = S;
@@ -176,7 +184,7 @@ double robust_loglikelihoodCDCC_C(double alpha, double beta, arma::mat rt,
     r22 = rt(t,1) * rt(t,1);
   }
   
-  S = corr_reweighted_C(rts, 5.991465, 1.0526);
+  S = corr_reweighted_C(rts, chisq2=5.991465, cy2=1.0526, k=k);
   S0 = (1-alpha-beta) * S;
   
   Qt = S;
