@@ -134,21 +134,22 @@ BEGIN_RCPP
 END_RCPP
 }
 // corr_reweighted_C
-arma::mat corr_reweighted_C(arma::mat St, double chisq2, double cy2);
-RcppExport SEXP _robcdcc_corr_reweighted_C(SEXP StSEXP, SEXP chisq2SEXP, SEXP cy2SEXP) {
+arma::mat corr_reweighted_C(arma::mat St, double chisq2, double cy2, int k);
+RcppExport SEXP _robcdcc_corr_reweighted_C(SEXP StSEXP, SEXP chisq2SEXP, SEXP cy2SEXP, SEXP kSEXP) {
 BEGIN_RCPP
     Rcpp::RObject rcpp_result_gen;
     Rcpp::RNGScope rcpp_rngScope_gen;
     Rcpp::traits::input_parameter< arma::mat >::type St(StSEXP);
     Rcpp::traits::input_parameter< double >::type chisq2(chisq2SEXP);
     Rcpp::traits::input_parameter< double >::type cy2(cy2SEXP);
-    rcpp_result_gen = Rcpp::wrap(corr_reweighted_C(St, chisq2, cy2));
+    Rcpp::traits::input_parameter< int >::type k(kSEXP);
+    rcpp_result_gen = Rcpp::wrap(corr_reweighted_C(St, chisq2, cy2, k));
     return rcpp_result_gen;
 END_RCPP
 }
 // robust_compositeCDCC_C
-double robust_compositeCDCC_C(double alpha, double beta, arma::mat St, int nobs, int ndim, double cy1, double chisq1, double cy2, double chisq2);
-RcppExport SEXP _robcdcc_robust_compositeCDCC_C(SEXP alphaSEXP, SEXP betaSEXP, SEXP StSEXP, SEXP nobsSEXP, SEXP ndimSEXP, SEXP cy1SEXP, SEXP chisq1SEXP, SEXP cy2SEXP, SEXP chisq2SEXP) {
+double robust_compositeCDCC_C(double alpha, double beta, arma::mat St, int nobs, int ndim, double cy1, double chisq1, double cy2, double chisq2, int k);
+RcppExport SEXP _robcdcc_robust_compositeCDCC_C(SEXP alphaSEXP, SEXP betaSEXP, SEXP StSEXP, SEXP nobsSEXP, SEXP ndimSEXP, SEXP cy1SEXP, SEXP chisq1SEXP, SEXP cy2SEXP, SEXP chisq2SEXP, SEXP kSEXP) {
 BEGIN_RCPP
     Rcpp::RObject rcpp_result_gen;
     Rcpp::RNGScope rcpp_rngScope_gen;
@@ -161,7 +162,8 @@ BEGIN_RCPP
     Rcpp::traits::input_parameter< double >::type chisq1(chisq1SEXP);
     Rcpp::traits::input_parameter< double >::type cy2(cy2SEXP);
     Rcpp::traits::input_parameter< double >::type chisq2(chisq2SEXP);
-    rcpp_result_gen = Rcpp::wrap(robust_compositeCDCC_C(alpha, beta, St, nobs, ndim, cy1, chisq1, cy2, chisq2));
+    Rcpp::traits::input_parameter< int >::type k(kSEXP);
+    rcpp_result_gen = Rcpp::wrap(robust_compositeCDCC_C(alpha, beta, St, nobs, ndim, cy1, chisq1, cy2, chisq2, k));
     return rcpp_result_gen;
 END_RCPP
 }
@@ -252,8 +254,8 @@ static const R_CallMethodDef CallEntries[] = {
     {"_robcdcc_calc_Rt_C", (DL_FUNC) &_robcdcc_calc_Rt_C, 3},
     {"_robcdcc_loglikelihoodGARCH_C", (DL_FUNC) &_robcdcc_loglikelihoodGARCH_C, 5},
     {"_robcdcc_calc_ht_C", (DL_FUNC) &_robcdcc_calc_ht_C, 5},
-    {"_robcdcc_corr_reweighted_C", (DL_FUNC) &_robcdcc_corr_reweighted_C, 3},
-    {"_robcdcc_robust_compositeCDCC_C", (DL_FUNC) &_robcdcc_robust_compositeCDCC_C, 9},
+    {"_robcdcc_corr_reweighted_C", (DL_FUNC) &_robcdcc_corr_reweighted_C, 4},
+    {"_robcdcc_robust_compositeCDCC_C", (DL_FUNC) &_robcdcc_robust_compositeCDCC_C, 10},
     {"_robcdcc_robust_calc_Qs_C", (DL_FUNC) &_robcdcc_robust_calc_Qs_C, 4},
     {"_robcdcc_robust_calc_Rt_C", (DL_FUNC) &_robcdcc_robust_calc_Rt_C, 5},
     {"_robcdcc_robust_loglikelihoodGARCH_C", (DL_FUNC) &_robcdcc_robust_loglikelihoodGARCH_C, 7},
