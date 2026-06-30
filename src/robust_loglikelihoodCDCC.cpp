@@ -216,15 +216,23 @@ double robust_loglikelihoodCDCC_C(
 // [[Rcpp::export]]
 double robust_compositeCDCC_C(double alpha, double beta, arma::mat St,
                               int nobs, int ndim, double cy1, double chisq1,
-                              double cy2, double chisq2){
+                              double cy2, double chisq2, int k){
   double lkh = 0;
   mat Stb = zeros(nobs, 2);
   
   for (int i = 0; i < ndim - 1; i++){
     Stb = St.cols(i,i+1);
     
-    lkh += robust_loglikelihoodCDCC_C(alpha, beta, Stb, nobs, 
-                                      cy1, chisq1, cy2, chisq2);
+    lkh += robust_loglikelihoodCDCC_C(
+      alpha, 
+      beta, 
+      Stb, 
+      nobs, 
+      cy1, 
+      chisq1, 
+      cy2, 
+      chisq2,
+      k);
   }
   
   return(lkh / (1.0 * ndim));
