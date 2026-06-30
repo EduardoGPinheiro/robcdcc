@@ -36,12 +36,12 @@ calc_ht_C <- function(omega, alpha1, beta1, rt, nobs) {
     .Call(`_robcdcc_calc_ht_C`, omega, alpha1, beta1, rt, nobs)
 }
 
-corr_reweighted_C <- function(St, chisq2, cy2) {
-    .Call(`_robcdcc_corr_reweighted_C`, St, chisq2, cy2)
+corr_reweighted_C <- function(St, chisq2, cy2, k) {
+    .Call(`_robcdcc_corr_reweighted_C`, St, chisq2, cy2, k)
 }
 
-robust_compositeCDCC_C <- function(alpha, beta, St, nobs, ndim, cy1, chisq1, cy2, chisq2) {
-    .Call(`_robcdcc_robust_compositeCDCC_C`, alpha, beta, St, nobs, ndim, cy1, chisq1, cy2, chisq2)
+robust_compositeCDCC_C <- function(alpha, beta, St, nobs, ndim, cy1, chisq1, cy2, chisq2, k) {
+    .Call(`_robcdcc_robust_compositeCDCC_C`, alpha, beta, St, nobs, ndim, cy1, chisq1, cy2, chisq2, k)
 }
 
 robust_calc_Qs_C <- function(phi, rt, cy1, chisq1) {
