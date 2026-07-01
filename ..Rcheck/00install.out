@@ -1,0 +1,20 @@
+* installing *source* package ‘robcdcc’ ...
+** this is package ‘robcdcc’ version ‘1.0.2’
+** using staged installation
+** libs
+using C++ compiler: ‘g++ (Ubuntu 15.2.0-16ubuntu1) 15.2.0’
+using C++17
+make: Nada a ser feito para 'all'.
+make: 'symbols.rds' está atualizado.
+installing to /home/eduardo/Documentos/robcdcc/..Rcheck/00LOCK-robcdcc/00new/robcdcc/libs
+** R
+** byte-compile and prepare package for lazy loading
+** help
+Aviso: robcdcc-package.Rd:26: All text must be in a section
+*** installing help indices
+** building package indices
+** testing if installed package can be loaded from temporary location
+** checking absolute paths in shared objects and dynamic libraries
+** testing if installed package can be loaded from final location
+** testing if installed package keeps a record of temporary installation path
+* DONE (robcdcc)

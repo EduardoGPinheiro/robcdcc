@@ -1,4 +1,11 @@
-robust_optimCDCC = function(rt, cy1, chisq1, cy2, chisq2, ini_par=c(.05, .93)){
+robust_optimCDCC = function(
+    rt, 
+    cy1, 
+    chisq1, 
+    cy2, 
+    chisq2, 
+    ini_par=c(.05, .93),
+    k=30){
   resta <- rbind(c(-1, -1), diag(2))
   restb <- c(-0.9999, 0.00001, 0.00001)
 
@@ -15,7 +22,8 @@ robust_optimCDCC = function(rt, cy1, chisq1, cy2, chisq2, ini_par=c(.05, .93)){
                            cy1=cy1, 
                            chisq1=chisq1,
                            cy2=cy2,
-                           chisq2=chisq2)
+                           chisq2=chisq2,
+                           k=k)
   opt = opt$par
   
   return(opt)

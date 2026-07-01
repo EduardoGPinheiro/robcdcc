@@ -1,0 +1,13 @@
+Hmm ... looks like a package
+Converting parsed Rd's to LaTeX 
+Creating pdf output from LaTeX ...
+Aviso em texi2dvi(file = file, pdf = TRUE, clean = clean, quiet = quiet,  :
+  script/programa texi2dvi não está disponível, usando uma emulação
+Error in texi2dvi(file = file, pdf = TRUE, clean = clean, quiet = quiet,  : 
+  pdflatex is not available
+Aviso em texi2dvi(file = file, pdf = TRUE, clean = clean, quiet = quiet,  :
+  script/programa texi2dvi não está disponível, usando uma emulação
+Error in texi2dvi(file = file, pdf = TRUE, clean = clean, quiet = quiet,  : 
+  pdflatex is not available
+Erro ao executar tools::texi2pdf()
+You may want to clean up by 'rm -Rf /tmp/RtmpZ1jB5n/Rd2pdfdcf41c0adb4b'

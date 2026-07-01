@@ -1,0 +1,310 @@
+\nonstopmode{}
+\documentclass[letterpaper]{book}
+\usepackage[times,inconsolata,hyper]{Rd}
+\usepackage{makeidx}
+\makeatletter\@ifl@t@r\fmtversion{2018/04/01}{}{\usepackage[utf8]{inputenc}}\makeatother
+% \usepackage{graphicx} % @USE GRAPHICX@
+\makeindex{}
+\begin{document}
+\chapter*{}
+\begin{center}
+{\textbf{\huge Package `robcdcc'}}
+\par\bigskip{\large \today}
+\end{center}
+\ifthenelse{\boolean{Rd@use@hyper}}{\hypersetup{pdftitle = {robcdcc: Simulation and robust estimation for GARCH-cDCC process of order (1,1)}}}{}
+\begin{description}
+\raggedright{}
+\item[Type]\AsIs{Package}
+\item[Title]\AsIs{Simulation and robust estimation for GARCH-cDCC process of order
+(1,1)}
+\item[Version]\AsIs{1.0.2}
+\item[Author]\AsIs{Eduardo}
+\item[Maintainer]\AsIs{Eduardo }\email{eduardogabriel2077@gmail.com}\AsIs{}
+\item[Description]\AsIs{Application with functions in Rcpp.}
+\item[License]\AsIs{MIT + file LICENSE}
+\item[Imports]\AsIs{Rcpp, truncnorm, dplyr, purrr, rlist, mvnfast}
+\item[LinkingTo]\AsIs{Rcpp, RcppArmadillo}
+\item[Suggests]\AsIs{testthat (>= 3.0.0)}
+\item[Config/testthat/edition]\AsIs{3}
+\item[RoxygenNote]\AsIs{7.2.0}
+\item[NeedsCompilation]\AsIs{yes}
+\item[SystemRequirements]\AsIs{C++17}
+\end{description}
+\Rdcontents{Contents}
+\HeaderA{robcdcc-package}{Simulation and robust estimation for GARCH-cDCC process of order (1,1)}{robcdcc.Rdash.package}
+\aliasA{robcdcc}{robcdcc-package}{robcdcc}
+\keyword{package}{robcdcc-package}
+%
+\begin{Description}
+Application with functions in Rcpp.
+\end{Description}
+%
+\begin{Details}
+
+The DESCRIPTION file:
+This package was not yet installed at build time.\\{}
+
+Index:  This package was not yet installed at build time.\\{}
+\textasciitilde{}\textasciitilde{} An overview of how to use the package, including the most important functions \textasciitilde{}\textasciitilde{}
+\end{Details}
+%
+\begin{Author}
+Eduardo
+
+Maintainer: Eduardo <eduardogabriel2077@gmail.com>
+\end{Author}
+%
+\begin{References}
+\textasciitilde{}\textasciitilde{} Literature or other references for background information \textasciitilde{}\textasciitilde{}
+\end{References}
+%
+\begin{SeeAlso}
+\textasciitilde{}\textasciitilde{} Optional links to other man pages, e.g. \textasciitilde{}\textasciitilde{}
+\textasciitilde{}\textasciitilde{} \code{\LinkA{<pkg>}{<pkg>}} \textasciitilde{}\textasciitilde{}
+\end{SeeAlso}
+%
+\begin{Examples}
+\begin{ExampleCode}
+~~ simple examples of the most important functions ~~
+\end{ExampleCode}
+\end{Examples}
+\HeaderA{calc\_ht}{Calculate ht using GARCH}{calc.Rul.ht}
+%
+\begin{Description}
+Calculate ht using GARCH
+\end{Description}
+%
+\begin{Usage}
+\begin{verbatim}
+calc_ht(rt, eta)
+\end{verbatim}
+\end{Usage}
+%
+\begin{Arguments}
+\begin{ldescription}
+\item[\code{rt}] returns
+
+\item[\code{eta}] GARCH parameters
+\end{ldescription}
+\end{Arguments}
+%
+\begin{Value}
+volatility (ht)
+\end{Value}
+\HeaderA{calc\_robust\_devolatilized\_returns}{Calculate devolatilized returns using BIP-GARCH especification}{calc.Rul.robust.Rul.devolatilized.Rul.returns}
+%
+\begin{Description}
+Calculate devolatilized returns using BIP-GARCH especification
+\end{Description}
+%
+\begin{Usage}
+\begin{verbatim}
+calc_robust_devolatilized_returns(rt, eta_df, delta = 0.975)
+\end{verbatim}
+\end{Usage}
+%
+\begin{Arguments}
+\begin{ldescription}
+\item[\code{rt}] returns
+
+\item[\code{eta\_df}] GARCH parameters
+
+\item[\code{delta}] Quantile for Chi-Squared
+\end{ldescription}
+\end{Arguments}
+%
+\begin{Value}
+devolatilized returns
+\end{Value}
+\HeaderA{estimateGARCH}{Calculate corretion factor}{estimateGARCH}
+%
+\begin{Description}
+Calculate corretion factor
+\end{Description}
+%
+\begin{Usage}
+\begin{verbatim}
+estimateGARCH(rt)
+\end{verbatim}
+\end{Usage}
+%
+\begin{Arguments}
+\begin{ldescription}
+\item[\code{rt}] return matrix
+\end{ldescription}
+\end{Arguments}
+%
+\begin{Value}
+Fit results
+\end{Value}
+\HeaderA{fc}{Calculate correction factor}{fc}
+%
+\begin{Description}
+Calculate correction factor
+\end{Description}
+%
+\begin{Usage}
+\begin{verbatim}
+fc(delta, N)
+\end{verbatim}
+\end{Usage}
+%
+\begin{Arguments}
+\begin{ldescription}
+\item[\code{delta}] Quantile for Chi-Squared
+
+\item[\code{N}] Dimension
+\end{ldescription}
+\end{Arguments}
+%
+\begin{Value}
+Correction factor for the weighted variance estimator
+\end{Value}
+\HeaderA{RcppArmadillo-Functions}{Set of functions in example RcppArmadillo package}{RcppArmadillo.Rdash.Functions}
+\aliasA{rcpparma\_bothproducts}{RcppArmadillo-Functions}{rcpparma.Rul.bothproducts}
+\aliasA{rcpparma\_hello\_world}{RcppArmadillo-Functions}{rcpparma.Rul.hello.Rul.world}
+\aliasA{rcpparma\_innerproduct}{RcppArmadillo-Functions}{rcpparma.Rul.innerproduct}
+\aliasA{rcpparma\_outerproduct}{RcppArmadillo-Functions}{rcpparma.Rul.outerproduct}
+%
+\begin{Description}
+These four functions are created when
+\code{RcppArmadillo.package.skeleton()} is invoked to create a
+skeleton packages.
+\end{Description}
+%
+\begin{Usage}
+\begin{verbatim}
+rcpparma_hello_world()
+rcpparma_outerproduct(x)
+rcpparma_innerproduct(x)
+rcpparma_bothproducts(x)
+\end{verbatim}
+\end{Usage}
+%
+\begin{Arguments}
+\begin{ldescription}
+\item[\code{x}] a numeric vector
+\end{ldescription}
+\end{Arguments}
+%
+\begin{Details}
+These are example functions which should be largely
+self-explanatory. Their main benefit is to demonstrate how to write a
+function using the Armadillo C++ classes, and to have to such a
+function accessible from R.
+\end{Details}
+%
+\begin{Value}
+\code{rcpparma\_hello\_world()} does not return a value, but displays a
+message to the console.
+
+\code{rcpparma\_outerproduct()} returns a numeric matrix computed as the
+outer (vector) product of \code{x}.
+
+\code{rcpparma\_innerproduct()} returns a double computer as the inner
+(vector) product of \code{x}.
+
+\code{rcpparma\_bothproducts()} returns a list with both the outer and
+inner products.
+
+\end{Value}
+%
+\begin{Author}
+Dirk Eddelbuettel
+\end{Author}
+%
+\begin{References}
+See the documentation for Armadillo, and RcppArmadillo, for more details.
+\end{References}
+%
+\begin{Examples}
+\begin{ExampleCode}
+  x <- sqrt(1:4)
+  rcpparma_innerproduct(x)
+  rcpparma_outerproduct(x)
+\end{ExampleCode}
+\end{Examples}
+\HeaderA{robust\_calc\_ht}{Calculate ht using BIP-GARCH}{robust.Rul.calc.Rul.ht}
+%
+\begin{Description}
+Calculate ht using BIP-GARCH
+\end{Description}
+%
+\begin{Usage}
+\begin{verbatim}
+robust_calc_ht(rt, eta, delta)
+\end{verbatim}
+\end{Usage}
+%
+\begin{Arguments}
+\begin{ldescription}
+\item[\code{rt}] returns
+
+\item[\code{eta}] GARCH parameters
+
+\item[\code{delta}] Quantile for Chi-Squared
+\end{ldescription}
+\end{Arguments}
+%
+\begin{Value}
+volatility (ht)
+\end{Value}
+\HeaderA{robust\_estimateGARCH}{Estimate GARCH(1,1) parameters using BIP-GARCH especification and  M-estimation}{robust.Rul.estimateGARCH}
+%
+\begin{Description}
+Estimate GARCH(1,1) parameters using BIP-GARCH especification and 
+M-estimation
+\end{Description}
+%
+\begin{Usage}
+\begin{verbatim}
+robust_estimateGARCH(rt, cy, chisq, k = 30)
+\end{verbatim}
+\end{Usage}
+%
+\begin{Arguments}
+\begin{ldescription}
+\item[\code{rt}] returns
+
+\item[\code{cy}] correction factor
+
+\item[\code{chisq}] Quantile for Chi-Squared
+\end{ldescription}
+\end{Arguments}
+%
+\begin{Value}
+devolatilized returns
+\end{Value}
+\HeaderA{simCDCC}{Simulate cDCC(1,1)}{simCDCC}
+%
+\begin{Description}
+Simulate cDCC(1,1)
+\end{Description}
+%
+\begin{Usage}
+\begin{verbatim}
+simCDCC(phi, eta, S, nobs, ndim, seed)
+\end{verbatim}
+\end{Usage}
+%
+\begin{Arguments}
+\begin{ldescription}
+\item[\code{phi}] Parameters for cDCC(1,1)
+
+\item[\code{eta}] Parameters for GARCH(1,1)
+
+\item[\code{S}] Intercept matrix
+
+\item[\code{nobs}] Number of observations
+
+\item[\code{ndim}] Number of dimensions
+
+\item[\code{seed}] seed for random sampling
+\end{ldescription}
+\end{Arguments}
+%
+\begin{Value}
+List with results
+\end{Value}
+\printindex{}
+\end{document}

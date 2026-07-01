@@ -1,0 +1,44 @@
+
+R version 4.5.2 (2025-10-31) -- "[Not] Part in a Rumble"
+Copyright (C) 2025 The R Foundation for Statistical Computing
+Platform: x86_64-pc-linux-gnu
+
+R is free software and comes with ABSOLUTELY NO WARRANTY.
+You are welcome to redistribute it under certain conditions.
+Type 'license()' or 'licence()' for distribution details.
+
+  Natural language support but running in an English locale
+
+R is a collaborative project with many contributors.
+Type 'contributors()' for more information and
+'citation()' on how to cite R or R packages in publications.
+
+Type 'demo()' for some demos, 'help()' for on-line help, or
+'help.start()' for an HTML browser interface to help.
+Type 'q()' to quit R.
+
+> pkgname <- "robcdcc"
+> source(file.path(R.home("share"), "R", "examples-header.R"))
+> options(warn = 1)
+> library('robcdcc')
+> 
+> base::assign(".oldSearch", base::search(), pos = 'CheckExEnv')
+> base::assign(".old_wd", base::getwd(), pos = 'CheckExEnv')
+> cleanEx()
+> nameEx("rcpparma_hello_world")
+> ### * rcpparma_hello_world
+> 
+> flush(stderr()); flush(stdout())
+> 
+> ### Name: RcppArmadillo-Functions
+> ### Title: Set of functions in example RcppArmadillo package
+> ### Aliases: rcpparma_hello_world rcpparma_innerproduct
+> ###   rcpparma_outerproduct rcpparma_bothproducts
+> 
+> ### ** Examples
+> 
+>   x <- sqrt(1:4)
+>   rcpparma_innerproduct(x)
+Error in rcpparma_innerproduct(x) : 
+  could not find function "rcpparma_innerproduct"
+Execution halted
