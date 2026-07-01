@@ -286,8 +286,14 @@ robust_estimateCDCC = function(rt, delta=.975, k=30, ini_par=c(0.05, .93)){
   Dt = robust_estimated_GARCH_result$Dt
   
   # cDCC robust estimation
-  phi = robust_optimCDCC(rt=epsilon, cy1=cy1, chisq1=chisq1, 
-                         cy2=cy2, chisq2=chisq2, ini_par = ini_par)
+  phi = robust_optimCDCC(
+    rt=epsilon, 
+    cy1=cy1, 
+    chisq1=chisq1, 
+    cy2=cy2, 
+    chisq2=chisq2, 
+    ini_par = ini_par,
+    k=k)
   
   return(list(eta=eta, phi=phi, epsilon=epsilon, Dt=Dt))
 }
@@ -296,10 +302,10 @@ robust_estimateCDCC = function(rt, delta=.975, k=30, ini_par=c(0.05, .93)){
 #'
 #' @param rt returns matrix
 #' @param delta chi-squared quantile for the definition of the weighting scheme 
-#' 
+#' @param delta reweighted unconditional correlation local window size
 #' @return The estimated parameters for BIP_GARCH(1,1)-BIP-cDCC(1,1)
 
-high_dimension_robust_estimateCDCC = function(rt, delta){
+high_dimension_robust_estimateCDCC = function(rt, delta, k=30){
   robust_control = biv_robust_control(delta)  
   cy1 = robust_control[1]
   cy2 = robust_control[2]
@@ -310,7 +316,13 @@ high_dimension_robust_estimateCDCC = function(rt, delta){
   chisq2 = qchisq(delta, 2) # df = 2
   
   # cDCC robust estimation
-  phi = robust_optimCDCC(rt, cy1, chisq1, cy2, chisq2)
+  phi = robust_optimCDCC(
+    rt=rt, 
+    cy1=cy1, 
+    chisq1=chisq1, 
+    cy2=cy2, 
+    chisq2=chisq2, 
+    k=k)
   
   return(phi)  
 }

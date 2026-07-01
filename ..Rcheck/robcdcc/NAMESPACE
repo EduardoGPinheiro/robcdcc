@@ -1,0 +1,8 @@
+useDynLib(robcdcc, .registration=TRUE)
+importFrom(Rcpp, evalCpp)
+importFrom(dplyr, "%>%", "case_when", "select", "rename")
+importFrom(purrr, "map")
+importFrom(stats, "median", "qchisq", "rchisq", "rnorm", "var")
+importFrom(truncnorm, "rtruncnorm")
+importFrom(mvnfast, "rmvn")
+exportPattern("^[[:alpha:]]+")

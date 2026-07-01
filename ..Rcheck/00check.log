@@ -1,0 +1,161 @@
+* using log directory ‘/home/eduardo/Documentos/robcdcc/..Rcheck’
+* using R version 4.5.2 (2025-10-31)
+* using platform: x86_64-pc-linux-gnu
+* R was compiled by
+    gcc (Ubuntu 15.2.0-11ubuntu1) 15.2.0
+    GNU Fortran (Ubuntu 15.2.0-11ubuntu1) 15.2.0
+* running under: Ubuntu 26.04 LTS
+* using session charset: UTF-8
+* checking for file ‘./DESCRIPTION’ ... OK
+* checking extension type ... Package
+* this is package ‘robcdcc’ version ‘1.0.2’
+* checking package namespace information ... OK
+* checking package dependencies ... OK
+* checking if this is a source package ... WARNING
+Subdirectory ‘robcdcc/src’ contains apparent object files/libraries
+  RcppExports.o general_portoflio_var.o loglikelihoodCDCC.o
+  loglikelihoodGARCH.o robcdcc.so robust_loglikelihoodCDCC.o
+  robust_loglikelihoodGARCH.o simCDCC_C.o
+Object files/libraries should not be included in a source package.
+* checking if there is a namespace ... OK
+* checking for executable files ... OK
+* checking for hidden files and directories ... NOTE
+Found the following hidden files and directories:
+  .Rhistory
+  .Rprofile
+  .gitignore
+  renv/.gitignore
+  ..Rcheck
+  .Rproj.user
+  .git
+These were most likely included in error. See section ‘Package
+structure’ in the ‘Writing R Extensions’ manual.
+* checking for portable file names ... OK
+* checking for sufficient/correct file permissions ... OK
+* checking whether package ‘robcdcc’ can be installed ... OK
+* used C++ compiler: ‘g++ (Ubuntu 15.2.0-16ubuntu1) 15.2.0’
+* checking C++ specification ... OK
+* checking installed package size ... INFO
+  installed size is  6.9Mb
+  sub-directories of 1Mb or more:
+    libs   6.8Mb
+* checking package directory ... OK
+* checking DESCRIPTION meta-information ... NOTE
+Ponteiros de arquivo de licença inválidos: LICENSE
+Checking should be performed on sources prepared by ‘R CMD build’.
+* checking top-level files ... OK
+* checking for left-over files ... OK
+* checking index information ... OK
+* checking package subdirectories ... WARNING
+Found the following directory with the name of a check directory:
+  ./..Rcheck
+Most likely, these were included erroneously.
+* checking code files for non-ASCII characters ... OK
+* checking R files for syntax errors ... OK
+* checking whether the package can be loaded ... OK
+* checking whether the package can be loaded with stated dependencies ... OK
+* checking whether the package can be unloaded cleanly ... OK
+* checking whether the namespace can be loaded with stated dependencies ... OK
+* checking whether the namespace can be unloaded cleanly ... OK
+* checking loading without being on the library search path ... OK
+* checking dependencies in R code ... OK
+* checking S3 generic/method consistency ... OK
+* checking replacement functions ... OK
+* checking foreign function calls ... OK
+* checking R code for possible problems ... NOTE
+calc_Dt: no visible binding for global variable ‘mu’
+calc_Dt: no visible binding for global variable ‘omega’
+calc_Dt: no visible binding for global variable ‘alpha’
+calc_Dt: no visible binding for global variable ‘.’
+estimateGARCH: no visible binding for global variable ‘.’
+robust_calc_Dt: no visible binding for global variable ‘mu’
+robust_calc_Dt: no visible binding for global variable ‘omega’
+robust_calc_Dt: no visible binding for global variable ‘alpha’
+robust_calc_Dt: no visible binding for global variable ‘.’
+robust_estimateGARCH: no visible binding for global variable ‘.’
+simCDCCt: no visible global function definition for ‘sqrtm’
+Undefined global functions or variables:
+  . alpha mu omega sqrtm
+* checking Rd files ... WARNING
+prepare_Rd: robcdcc-package.Rd:26: All text must be in a section
+* checking Rd metadata ... OK
+* checking Rd cross-references ... INFO
+Pacote desconhecido ‘<pkg>’ nos Rd xrefs
+* checking for missing documentation entries ... WARNING
+Objetos de código não documentados:
+  ‘biv_robust_control’ ‘calc_Dt’ ‘calc_Qs’ ‘calc_Qs_C’ ‘calc_Rt’
+  ‘calc_Rt_C’ ‘calc_devolatilized_returns’ ‘calc_ht_C’
+  ‘calc_real_portfolio_variance_C’ ‘compositeCDCC_C’ ‘corr_reweighted’
+  ‘corr_reweighted_C’ ‘estimateCDCC’ ‘geral_calc_portfolio_variance’
+  ‘geral_calc_portfolio_variance_C’ ‘gradientCDCC’
+  ‘high_dimension_estimateCDCC’ ‘high_dimension_robust_estimateCDCC’
+  ‘loglikelihoodCDCC’ ‘loglikelihoodGARCH’ ‘loglikelihoodGARCH_C’
+  ‘medianB’ ‘optimCDCC’ ‘optimGARCH’ ‘robust_calc_Dt’ ‘robust_calc_Qs’
+  ‘robust_calc_Qs_C’ ‘robust_calc_Rt’ ‘robust_calc_Rt_C’
+  ‘robust_calc_ht_C’ ‘robust_compositeCDCC_C’ ‘robust_estimateCDCC’
+  ‘robust_gradientCDCC’ ‘robust_gradientGARCH’
+  ‘robust_loglikelihoodCDCC’ ‘robust_loglikelihoodGARCH’
+  ‘robust_loglikelihoodGARCH_C’ ‘robust_optimCDCC’ ‘robust_optimGARCH’
+  ‘simCDCC_C’ ‘simCDCCt’ ‘simGARCH’ ‘simGARCH_outliers’
+  ‘unconditional_correlation’
+All user-level objects in a package should have documentation entries.
+See chapter ‘Writing R documentation files’ in the ‘Writing R
+Extensions’ manual.
+* checking for code/documentation mismatches ... WARNING
+Functions or methods with usage in Rd file 'rcpparma_hello_world.Rd' but not in code:
+  ‘rcpparma_hello_world’ ‘rcpparma_outerproduct’
+  ‘rcpparma_innerproduct’ ‘rcpparma_bothproducts’
+
+* checking Rd \usage sections ... WARNING
+Undocumented arguments in Rd file 'robust_estimateGARCH.Rd'
+  ‘k’
+
+Functions with \usage entries need to have the appropriate \alias
+entries, and all their arguments documented.
+The \usage entries must correspond to syntactically valid R code.
+See chapter ‘Writing R documentation files’ in the ‘Writing R
+Extensions’ manual.
+* checking Rd contents ... NOTE
+Auto-generated content requiring editing in Rd file 'robcdcc-package.Rd':
+  \details: ‘...o use the package, including the most important functions ~~’
+  \references: ‘~~ Literature or other references for background information ~~’
+  \seealso: ‘~~ Optional links to other man pages, e.g. ~~ ~~ \code{\link...’
+* checking for unstated dependencies in examples ... WARNING
+Aviso: erro na análise do arquivo 'robcdcc-Ex.R':
+41:11: unexpected symbol
+40: 
+41: ~~ simple examples
+              ^
+* checking line endings in C/C++/Fortran sources/headers ... OK
+* checking line endings in Makefiles ... OK
+* checking compilation flags in Makevars ... OK
+* checking for GNU extensions in Makefiles ... OK
+* checking for portable use of $(BLAS_LIBS) and $(LAPACK_LIBS) ... OK
+* checking use of PKG_*FLAGS in Makefiles ... OK
+* checking compiled code ... OK
+* checking examples ... ERROR
+Running examples in ‘robcdcc-Ex.R’ failed
+The error most likely occurred in:
+
+> ### Name: RcppArmadillo-Functions
+> ### Title: Set of functions in example RcppArmadillo package
+> ### Aliases: rcpparma_hello_world rcpparma_innerproduct
+> ###   rcpparma_outerproduct rcpparma_bothproducts
+> 
+> ### ** Examples
+> 
+>   x <- sqrt(1:4)
+>   rcpparma_innerproduct(x)
+Error in rcpparma_innerproduct(x) : 
+  could not find function "rcpparma_innerproduct"
+Execution halted
+* checking for unstated dependencies in ‘tests’ ... OK
+* checking tests ... OK
+  Running ‘testthat.R’
+* checking PDF version of manual ... WARNING
+LaTeX errors when creating PDF version.
+This typically indicates Rd problems.
+* checking PDF version of manual without index ... ERROR
+Re-running with no redirection of stdout/stderr.
+* DONE
+Status: 2 ERRORs, 8 WARNINGs, 4 NOTEs

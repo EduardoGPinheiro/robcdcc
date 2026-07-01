@@ -1,0 +1,14 @@
+calc_ht                 Calculate ht using GARCH
+calc_robust_devolatilized_returns
+                        Calculate devolatilized returns using BIP-GARCH
+                        especification
+estimateGARCH           Calculate corretion factor
+fc                      Calculate correction factor
+rcpparma_hello_world    Set of functions in example RcppArmadillo
+                        package
+robcdcc-package         Simulation and robust estimation for GARCH-cDCC
+                        process of order (1,1)
+robust_calc_ht          Calculate ht using BIP-GARCH
+robust_estimateGARCH    Estimate GARCH(1,1) parameters using BIP-GARCH
+                        especification and M-estimation
+simCDCC                 Simulate cDCC(1,1)
