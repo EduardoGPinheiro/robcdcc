@@ -1,3 +1,6 @@
+library(robcdcc)
+library(dplyr)
+
 # Parameters
 phi = c(.1, .8)
 
@@ -65,7 +68,6 @@ test_that("portfolio results", {
     q_phi = q_results$phi,
     r_phi = r_results$phi,
     rt = rt,
-    burn_rt = rt[1:2, ],
     r_rt = r_results$epsilon,
     q_rt = q_results$epsilon,
     S = diag(2),
@@ -108,7 +110,6 @@ test_that("real portfolio variance", {
     q_phi = q_results$phi,
     r_phi = r_results$phi,
     rt = rt,
-    burn_rt = rt[1:2, ],
     r_rt = r_results$epsilon,
     q_rt = q_results$epsilon,
     S = diag(2),
@@ -131,4 +132,29 @@ test_that("real portfolio variance", {
   Ht = results_lst$Ht
   validate_real_var = 1 / sum(1/2 * diag(solve(Ht)))
   expect_equal(validate_real_var, real_var)
+})
+
+test_that("compare correlation calculation", {
+  results_lst = geral_calc_portfolio_variance(
+    phi = c(.1, .8),
+    q_phi = c(.1, .8),
+    r_phi = c(.1, .8),
+    rt = rt,
+    r_rt = rt,
+    q_rt = rt,
+    S = diag(2),
+    Dt = diag(2),
+    q_Dt = diag(2),
+    r_Dt = diag(2),
+    q_S = diag(2),
+    r_S = diag(2),
+    delta = .975
+  )
+  
+  Ht = results_lst$Ht[1, 2]
+  q_Ht = results_lst$q_Ht[1, 2]
+  r_Ht = results_lst$r_Ht[1, 2]
+
+  expect_equal(Ht, q_Ht, , tolerance = 1e-8)
+  expect_equal(Ht, r_Ht, , tolerance = 1e-1)
 })
