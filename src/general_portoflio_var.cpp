@@ -22,19 +22,22 @@ double rc2(double x, double k){
 // [[Rcpp::depends("RcppArmadillo")]]
 // [[Rcpp::export]]
 List geral_calc_portfolio_variance_C(arma::vec phi, 
-                                    arma::vec q_phi, arma::vec r_phi,  
-                                    arma::mat rt, arma::mat burn_rt,
+                                    arma::vec q_phi,
+                                    arma::vec r_phi,  
+                                    arma::mat rt,
                                     arma::mat q_rt,
                                     arma::mat r_rt,
-                                    arma::mat S, 
-                                    arma::mat Dt, arma::mat q_Dt, 
+                                    arma::mat Dt,
+                                    arma::mat q_Dt, 
                                     arma::mat r_Dt,
-                                    arma::mat q_S, arma::mat r_S,
-                                    double cy2, double chisq2){
+                                    arma::mat S, 
+                                    arma::mat q_S,
+                                    arma::mat r_S,
+                                    double cy2,
+                                    double chisq2){
   int nobs = rt.n_rows;
   int ndim = rt.n_cols;
-  int bnobs = burn_rt.n_rows - 1;
-  
+
   double a = phi[0];
   double b = phi[1];
   
@@ -83,8 +86,7 @@ List geral_calc_portfolio_variance_C(arma::vec phi,
   arma::mat rr(ndim, ndim);
   arma::mat q_rr(ndim, ndim);
   arma::mat r_rr(ndim, ndim);
-  arma::mat burn_rr(ndim, ndim);
-  
+
   double q_fro=0.0;
   double r_fro=0.0;
   double gmv = 0.0; 
@@ -104,23 +106,6 @@ List geral_calc_portfolio_variance_C(arma::vec phi,
   arma::mat sqrt_Dt(ndim, ndim);
   arma::mat sqrt_qDt(ndim, ndim);
   arma::mat sqrt_rDt(ndim, ndim);
-  
-  // burn in 
-  for(int t=0; t < bnobs; t++){
-    burn_rr = burn_rt.row(t).t() * burn_rt.row(t); 
-    
-    // Known Ht
-    Q = intercepto * S + 
-      a * diagmat(Qs) * burn_rr * diagmat(Qs) + 
-      b * Q;
-    
-    for(int i=0; i < ndim; i++){
-      Qs(i,i) = sqrt(Q(i,i));
-      IQs(i,i) = 1.0 / Qs(i,i);
-    }
-    
-    Rt = diagmat(IQs) * Q * diagmat(IQs);
-  }
   
   for(int t=0; t < nobs; t++){
     rr = rt.row(t).t() * rt.row(t); 

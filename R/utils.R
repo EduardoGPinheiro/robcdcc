@@ -355,18 +355,18 @@ robust_calc_Rt = function(rt, phi, S, delta=0.975) {
 #' Frobenius distance, Ratio of variance of the selected MVP and Percentage 
 #' increase of the variance of the selected MVP in relation to the variance of 
 #' the true MVP.
+#' @param phi true parameter for the cDCC(1,1)
 #' @param q_phi estimated parameter for the cDCC(1,1)
 #' @param r_phi estimated parameter for the BIP-cDCC(1,1)
 #' @param rt returns matrix
-#' @param burn_rt burn-in returns (for simulation examples)
 #' @param q_rt standardized returns by estimated GARCH(1,1) parameters
 #' @param r_rt standardized returns by estimated BIP-GARCH(1,1) parameters
-#' @param S unconditional covariance matrix
 #' @param Dt matrix of conditional variance for each series 
 #' @param q_Dt matrix of estimated conditional variance for each series by 
 #' GARCH(1,1) Quasi-Maximum Likelihood estimator
 #' @param r_Dt matrix of estimated conditional variance for each series by 
 #' BIP-GARCH(1,1) robust estimator
+#' @param S unconditional covariance matrix
 #' @param q_S estimated unconditional covariance matrix for the 
 #' Quasi-Maximum Likelihood estimator
 #' @param r_S estimated unconditional covariance matrix for the 
@@ -379,13 +379,12 @@ geral_calc_portfolio_variance = function(phi,
                                          q_phi,
                                          r_phi,
                                          rt,
-                                         burn_rt,
                                          q_rt,
                                          r_rt,
-                                         S,
                                          Dt,
                                          q_Dt,
                                          r_Dt,
+                                         S,
                                          q_S,
                                          r_S,
                                          delta) {
@@ -407,13 +406,12 @@ geral_calc_portfolio_variance = function(phi,
     q_phi = q_phi,
     r_phi = r_phi,
     rt = rt,
-    burn_rt = burn_rt,
     q_rt = q_rt,
     r_rt=r_rt,
-    S = S,
     Dt = Dt,
     q_Dt = q_Dt,
     r_Dt = r_Dt,
+    S = S,
     q_S = q_S,
     r_S = r_S,
     cy2 = cy2,
