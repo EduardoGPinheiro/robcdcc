@@ -371,7 +371,6 @@ robust_calc_Rt = function(rt, phi, S, delta=0.975) {
 #' Quasi-Maximum Likelihood estimator
 #' @param r_S estimated unconditional covariance matrix for the 
 #' robust estimator 
-#' @param delta chi-squared quantile for the definition of the weighting scheme
 #' 
 #' @return MVP performance measures.
 
@@ -386,20 +385,7 @@ geral_calc_portfolio_variance = function(phi,
                                          r_Dt,
                                          S,
                                          q_S,
-                                         r_S,
-                                         delta) {
-  # Get dimensions and correction factors
-  N = ncol(rt)
-  
-  if(N==2){
-    robust_control = biv_robust_control(delta)  
-    cy2 = robust_control[2]
-  } else {
-    cy2 = fc(delta, N)  
-  }
-  
-  chisq2 = qchisq(delta, N)
-  
+                                         r_S) {
   # Portfolio results
   results_lst = geral_calc_portfolio_variance_C(
     phi = phi,
@@ -413,9 +399,7 @@ geral_calc_portfolio_variance = function(phi,
     r_Dt = r_Dt,
     S = S,
     q_S = q_S,
-    r_S = r_S,
-    cy2 = cy2,
-    chisq2 = chisq2
+    r_S = r_S
   )
   
   results_lst$portfolio_metrics = as.data.frame(results_lst$portfolio_metrics)

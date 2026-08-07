@@ -2,7 +2,7 @@
 % Please edit documentation in R/utils.R
 \name{calc_robust_devolatilized_returns}
 \alias{calc_robust_devolatilized_returns}
-\title{Calculate devolatilized returns using BIP-GARCH especification}
+\title{Calculate devolatilized returns using BIP-GARCH specification}
 \usage{
 calc_robust_devolatilized_returns(rt, eta_df, delta = 0.975)
 }
@@ -17,5 +17,5 @@ calc_robust_devolatilized_returns(rt, eta_df, delta = 0.975)
 devolatilized returns
 }
 \description{
-Calculate devolatilized returns using BIP-GARCH especification
+Calculate devolatilized returns using BIP-GARCH specification
 }

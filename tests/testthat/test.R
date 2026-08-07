@@ -75,8 +75,7 @@ test_that("portfolio results", {
     q_Dt = q_results$Dt %>% tail(1) %>% as.vector %>% diag,
     r_Dt = r_results$Dt %>% tail(1) %>% as.vector %>% diag,
     q_S = diag(2),
-    r_S = diag(2),
-    delta = .975
+    r_S = diag(2)
   )
  
  q_Dt = q_results$Dt %>% tail(1) %>% as.vector %>% diag %>% sqrt
@@ -88,8 +87,7 @@ test_that("portfolio results", {
  
  # robust
  rRt = diag(1/diag(r_Dt)) %*% results_lst$r_Ht %*% diag(1/diag(r_Dt))
- validate_rRt = robust_calc_Rt(rt=r_results$epsilon, 
-                               phi=r_results$phi, S=diag(2))$Rt
+ validate_rRt = calc_Rt(rt=r_results$epsilon, phi=r_results$phi, S=diag(2))
  
  expect_equal(qRt, validate_qRt)
  expect_equal(rRt, validate_rRt)
@@ -117,8 +115,7 @@ test_that("real portfolio variance", {
     q_Dt = q_results$Dt %>% tail(1) %>% as.vector %>% diag,
     r_Dt = r_results$Dt %>% tail(1) %>% as.vector %>% diag,
     q_S = diag(2),
-    r_S = diag(2),
-    delta = .975
+    r_S = diag(2)
   )
   
   real_var = calc_real_portfolio_variance_C(
@@ -147,8 +144,7 @@ test_that("compare correlation calculation", {
     q_Dt = diag(2),
     r_Dt = diag(2),
     q_S = diag(2),
-    r_S = diag(2),
-    delta = .975
+    r_S = diag(2)
   )
   
   Ht = results_lst$Ht[1, 2]
