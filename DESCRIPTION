@@ -1,7 +1,7 @@
 Package: robcdcc
 Type: Package
 Title: Simulation and robust estimation for GARCH-cDCC process of order (1,1)
-Version: 1.0.3
+Version: 1.0.4
 Author: Eduardo
 Maintainer: Eduardo <eduardogabriel2077@gmail.com>
 Description: Application with functions in Rcpp.
@@ -10,6 +10,6 @@ Imports: Rcpp, truncnorm, dplyr, purrr, rlist, mvnfast
 LinkingTo: Rcpp, RcppArmadillo
 Suggests: testthat (>= 3.0.0)
 Config/testthat/edition: 3
-RoxygenNote: 7.2.0
 NeedsCompilation: yes
 SystemRequirements: C++17
+Config/roxygen2/version: 8.0.0

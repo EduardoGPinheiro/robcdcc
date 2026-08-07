@@ -2,7 +2,7 @@
 % Please edit documentation in R/utils.R
 \name{robust_estimateGARCH}
 \alias{robust_estimateGARCH}
-\title{Estimate GARCH(1,1) parameters using BIP-GARCH especification and 
+\title{Estimate GARCH(1,1) parameters using BIP-GARCH specification and 
 M-estimation}
 \usage{
 robust_estimateGARCH(rt, cy, chisq, k = 30)
@@ -18,6 +18,6 @@ robust_estimateGARCH(rt, cy, chisq, k = 30)
 devolatilized returns
 }
 \description{
-Estimate GARCH(1,1) parameters using BIP-GARCH especification and 
+Estimate GARCH(1,1) parameters using BIP-GARCH specification and 
 M-estimation
 }

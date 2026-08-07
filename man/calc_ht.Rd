@@ -2,7 +2,7 @@
 % Please edit documentation in R/utils.R
 \name{calc_ht}
 \alias{calc_ht}
-\title{Calculate ht using GARCH}
+\title{Calculate ht for GARCH(1,1)}
 \usage{
 calc_ht(rt, eta)
 }
@@ -15,5 +15,5 @@ calc_ht(rt, eta)
 volatility (ht)
 }
 \description{
-Calculate ht using GARCH
+Calculate ht for GARCH(1,1)
 }
