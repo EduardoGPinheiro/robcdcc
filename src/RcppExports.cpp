@@ -12,8 +12,8 @@ Rcpp::Rostream<false>& Rcpp::Rcerr = Rcpp::Rcpp_cerr_get();
 #endif
 
 // geral_calc_portfolio_variance_C
-List geral_calc_portfolio_variance_C(arma::vec phi, arma::vec q_phi, arma::vec r_phi, arma::mat rt, arma::mat q_rt, arma::mat r_rt, arma::mat Dt, arma::mat q_Dt, arma::mat r_Dt, arma::mat S, arma::mat q_S, arma::mat r_S, double cy2, double chisq2);
-RcppExport SEXP _robcdcc_geral_calc_portfolio_variance_C(SEXP phiSEXP, SEXP q_phiSEXP, SEXP r_phiSEXP, SEXP rtSEXP, SEXP q_rtSEXP, SEXP r_rtSEXP, SEXP DtSEXP, SEXP q_DtSEXP, SEXP r_DtSEXP, SEXP SSEXP, SEXP q_SSEXP, SEXP r_SSEXP, SEXP cy2SEXP, SEXP chisq2SEXP) {
+List geral_calc_portfolio_variance_C(arma::vec phi, arma::vec q_phi, arma::vec r_phi, arma::mat rt, arma::mat q_rt, arma::mat r_rt, arma::mat Dt, arma::mat q_Dt, arma::mat r_Dt, arma::mat S, arma::mat q_S, arma::mat r_S);
+RcppExport SEXP _robcdcc_geral_calc_portfolio_variance_C(SEXP phiSEXP, SEXP q_phiSEXP, SEXP r_phiSEXP, SEXP rtSEXP, SEXP q_rtSEXP, SEXP r_rtSEXP, SEXP DtSEXP, SEXP q_DtSEXP, SEXP r_DtSEXP, SEXP SSEXP, SEXP q_SSEXP, SEXP r_SSEXP) {
 BEGIN_RCPP
     Rcpp::RObject rcpp_result_gen;
     Rcpp::RNGScope rcpp_rngScope_gen;
@@ -29,9 +29,7 @@ BEGIN_RCPP
     Rcpp::traits::input_parameter< arma::mat >::type S(SSEXP);
     Rcpp::traits::input_parameter< arma::mat >::type q_S(q_SSEXP);
     Rcpp::traits::input_parameter< arma::mat >::type r_S(r_SSEXP);
-    Rcpp::traits::input_parameter< double >::type cy2(cy2SEXP);
-    Rcpp::traits::input_parameter< double >::type chisq2(chisq2SEXP);
-    rcpp_result_gen = Rcpp::wrap(geral_calc_portfolio_variance_C(phi, q_phi, r_phi, rt, q_rt, r_rt, Dt, q_Dt, r_Dt, S, q_S, r_S, cy2, chisq2));
+    rcpp_result_gen = Rcpp::wrap(geral_calc_portfolio_variance_C(phi, q_phi, r_phi, rt, q_rt, r_rt, Dt, q_Dt, r_Dt, S, q_S, r_S));
     return rcpp_result_gen;
 END_RCPP
 }
@@ -245,7 +243,7 @@ END_RCPP
 }
 
 static const R_CallMethodDef CallEntries[] = {
-    {"_robcdcc_geral_calc_portfolio_variance_C", (DL_FUNC) &_robcdcc_geral_calc_portfolio_variance_C, 14},
+    {"_robcdcc_geral_calc_portfolio_variance_C", (DL_FUNC) &_robcdcc_geral_calc_portfolio_variance_C, 12},
     {"_robcdcc_calc_real_portfolio_variance_C", (DL_FUNC) &_robcdcc_calc_real_portfolio_variance_C, 5},
     {"_robcdcc_unconditional_correlation", (DL_FUNC) &_robcdcc_unconditional_correlation, 2},
     {"_robcdcc_compositeCDCC_C", (DL_FUNC) &_robcdcc_compositeCDCC_C, 5},

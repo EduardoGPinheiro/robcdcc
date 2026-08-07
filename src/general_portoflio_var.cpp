@@ -32,9 +32,7 @@ List geral_calc_portfolio_variance_C(arma::vec phi,
                                     arma::mat r_Dt,
                                     arma::mat S, 
                                     arma::mat q_S,
-                                    arma::mat r_S,
-                                    double cy2,
-                                    double chisq2){
+                                    arma::mat r_S){
   int nobs = rt.n_rows;
   int ndim = rt.n_cols;
 
@@ -112,9 +110,6 @@ List geral_calc_portfolio_variance_C(arma::vec phi,
     q_rr= q_rt.row(t).t() * q_rt.row(t);
     r_rr= r_rt.row(t).t() * r_rt.row(t);
     
-    r_dt = (r_rt.row(t) * r_IRt * r_rt.row(t).t()).eval()(0,0);
-    wyc[t] = rc2(r_dt, chisq2);
-      
     // Known Ht
     Q = intercepto * S + 
       a * diagmat(Qs) * rr * diagmat(Qs) + 
@@ -141,7 +136,7 @@ List geral_calc_portfolio_variance_C(arma::vec phi,
     
     // Robust
     r_Q = r_intercepto * r_S + 
-      r_a * cy2 * rc2(r_dt, chisq2) * diagmat(r_Qs) * r_rr * diagmat(r_Qs) + 
+      r_a * diagmat(r_Qs) * r_rr * diagmat(r_Qs) + 
       r_b * r_Q;
     
     for(int i=0; i < ndim; i++){
