@@ -241,8 +241,12 @@ double robust_compositeCDCC_C(double alpha, double beta, arma::mat St,
 
 // [[Rcpp::depends("RcppArmadillo")]]
 // [[Rcpp::export]]
-arma::mat robust_calc_Qs_C(arma::vec phi, arma::mat rt, 
-                           double cy1, double chisq1){
+arma::mat robust_calc_Qs_C(
+    arma::vec phi, 
+    arma::mat rt, 
+    double cy1, 
+    double chisq1
+){
   int nobs = rt.n_rows;
   int ndim = rt.n_cols;
   
@@ -277,7 +281,9 @@ arma::mat robust_calc_Qs_C(arma::vec phi, arma::mat rt,
 List robust_calc_Rt_C(arma::vec phi,  
                       arma::mat rt, 
                       arma::mat S,
-                      double cy2, double chisq2){
+                      double cy2,
+                      double chisq2
+  ){
   int nobs = rt.n_rows;
   int ndim = rt.n_cols;
  
@@ -299,7 +305,7 @@ List robust_calc_Rt_C(arma::vec phi,
   List results;
   for(int t=0; t < nobs; t++){
     rr = rt.row(t).t() * rt.row(t); 
-    dt = (rt.row(t) * IRt * rt.row(t).t()).eval()(0,0);
+    dt = (rt.row(t) * rt.row(t).t()).eval()(0,0);
     w(t) = rc(dt, chisq2);
     
     // Robust
@@ -313,7 +319,6 @@ List robust_calc_Rt_C(arma::vec phi,
     }
     
     Rt = diagmat(IQs) * Q * diagmat(IQs);
-    IRt = arma::inv(Rt);
   }
   
   return Rcpp::List::create(Rcpp::Named("Rt") = Rt,
