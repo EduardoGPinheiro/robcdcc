@@ -24,7 +24,7 @@ arma::mat mvrnormArma(int n, arma::mat sigma) {
 
 // [[Rcpp::depends(RcppArmadillo)]]
 // [[Rcpp::export]]
-arma::mat simCDCC_C(arma::vec phi, arma::mat S, int nobs, double seed){
+List simCDCC_C(arma::vec phi, arma::mat S, int nobs, double seed){
   double a = phi[0];
   double b = phi[1];
   double intcp = (1-a-b);
@@ -69,8 +69,10 @@ arma::mat simCDCC_C(arma::vec phi, arma::mat S, int nobs, double seed){
     
 //    Rcout << "Q" << std::endl << Q << std::endl;
 //    Rcout << "rt" << std::endl << rt.row(t) << std::endl;
-    
+
   }
-  
-  return rt;
+
+  return Rcpp::List::create(Rcpp::Named("rt") = rt,
+                            Rcpp::Named("R") = R,
+                            Rcpp::Named("S") = S);
 }

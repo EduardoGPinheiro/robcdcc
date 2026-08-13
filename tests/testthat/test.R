@@ -5,7 +5,10 @@ library(dplyr)
 phi = c(.1, .8)
 
 # Estimation
-rt = simCDCC_C(phi=phi, S=diag(2), nobs=1000, seed=1)
+sim = simCDCC_C(phi=phi, S=diag(2), nobs=1000, seed=1)
+rt = sim$rt
+R = sim$R
+
 q_results = estimateCDCC(rt)
 r_results = robust_estimateCDCC(rt, delta=.975)
 
