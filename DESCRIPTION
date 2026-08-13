@@ -1,7 +1,7 @@
 Package: robcdcc
 Type: Package
 Title: Simulation and robust estimation for GARCH-cDCC process of order (1,1)
-Version: 1.0.4
+Version: 1.0.5
 Author: Eduardo
 Maintainer: Eduardo <eduardogabriel2077@gmail.com>
 Description: Application with functions in Rcpp.

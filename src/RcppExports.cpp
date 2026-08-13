@@ -228,7 +228,7 @@ BEGIN_RCPP
 END_RCPP
 }
 // simCDCC_C
-arma::mat simCDCC_C(arma::vec phi, arma::mat S, int nobs, double seed);
+List simCDCC_C(arma::vec phi, arma::mat S, int nobs, double seed);
 RcppExport SEXP _robcdcc_simCDCC_C(SEXP phiSEXP, SEXP SSEXP, SEXP nobsSEXP, SEXP seedSEXP) {
 BEGIN_RCPP
     Rcpp::RObject rcpp_result_gen;
