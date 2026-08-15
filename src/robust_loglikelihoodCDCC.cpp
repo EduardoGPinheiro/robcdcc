@@ -245,8 +245,7 @@ arma::mat robust_calc_Qs_C(
     arma::vec phi, 
     arma::mat rt, 
     double cy1, 
-    double chisq1
-){
+    double chisq1){
   int nobs = rt.n_rows;
   int ndim = rt.n_cols;
   
@@ -281,16 +280,14 @@ arma::mat robust_calc_Qs_C(
 List robust_calc_Rt_C(arma::vec phi,  
                       arma::mat rt, 
                       arma::mat S,
-                      double cy2,
-                      double chisq2
-  ){
+                      double cy2, double chisq2){
   int nobs = rt.n_rows;
   int ndim = rt.n_cols;
- 
+  
   double a = phi[0];
   double b = phi[1];
   
-  double dt = 0;
+  arma::vec dt(nobs);
   double intercepto = 1-a-b;
   
   arma::mat Qs = eye(ndim, ndim);
@@ -301,16 +298,16 @@ List robust_calc_Rt_C(arma::vec phi,
   
   arma::mat rr(ndim, ndim);
   arma::vec w(nobs);
-   
+  
   List results;
   for(int t=0; t < nobs; t++){
     rr = rt.row(t).t() * rt.row(t); 
-    dt = (rt.row(t) * rt.row(t).t()).eval()(0,0);
-    w(t) = rc(dt, chisq2);
+    dt(t) = (rt.row(t) * rt.row(t).t()).eval()(0,0);
+    w(t) = rc(dt(t), chisq2);
     
     // Robust
     Q = intercepto * S + 
-      a * cy2 * rc(dt, chisq2) * diagmat(Qs) * rr * diagmat(Qs) + 
+      a * cy2 * rc(dt(t), chisq2) * diagmat(Qs) * rr * diagmat(Qs) + 
       b * Q;
     
     for(int i=0; i < ndim; i++){
@@ -322,6 +319,7 @@ List robust_calc_Rt_C(arma::vec phi,
   }
   
   return Rcpp::List::create(Rcpp::Named("Rt") = Rt,
+                            Rcpp::Named("dt") = dt,
                             Rcpp::Named("w") = w);
 }
   
